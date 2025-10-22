@@ -15,6 +15,8 @@ module.exports = {
     extensions: ['.web.tsx', '.web.ts', '.tsx', '.ts', '.js', '.jsx'],
     alias: {
       'react-native$': 'react-native-web',
+      'react-native-svg': 'react-native-svg/lib/commonjs/ReactNativeSVG.web',
+      '@react-native-async-storage/async-storage': '@react-native-async-storage/async-storage/lib/commonjs/AsyncStorage.web',
     },
   },
   module: {

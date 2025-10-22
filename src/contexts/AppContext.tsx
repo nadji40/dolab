@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MockApi, Event, Attendee, PurchasedTicket, TeamMember, JobPosting } from '../lib/mockApi';
 
 // Theme types
 export type Theme = 'light' | 'dark';
@@ -261,6 +264,191 @@ export const LoadingProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// App State Context
+interface AppState {
+  events: Event[];
+  attendees: Attendee[];
+  userTickets: PurchasedTicket[];
+  teamMembers: TeamMember[];
+  jobPostings: JobPosting[];
+  analytics: any;
+  isOnline: boolean;
+  lastSync: string | null;
+}
+
+interface AppContextType {
+  state: AppState;
+  refreshEvents: () => Promise<void>;
+  refreshAttendees: (eventId?: string) => Promise<void>;
+  refreshUserTickets: () => Promise<void>;
+  refreshTeam: () => Promise<void>;
+  refreshJobs: () => Promise<void>;
+  refreshAnalytics: () => Promise<void>;
+  purchaseTicket: (eventId: string, ticketTypeId: string, attendeeInfo: any) => Promise<PurchasedTicket>;
+  checkInAttendee: (attendeeId: string) => Promise<boolean>;
+  applyForJob: (jobId: string, applicationData: any) => Promise<boolean>;
+  syncData: () => Promise<void>;
+}
+
+const AppContext = createContext<AppContextType | undefined>(undefined);
+
+export const useApp = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useApp must be used within an AppProvider');
+  }
+  return context;
+};
+
+export const AppProvider = ({ children }: { children: ReactNode }) => {
+  const [state, setState] = useState<AppState>({
+    events: [],
+    attendees: [],
+    userTickets: [],
+    teamMembers: [],
+    jobPostings: [],
+    analytics: null,
+    isOnline: true,
+    lastSync: null,
+  });
+
+  // Initialize data
+  useEffect(() => {
+    initializeApp();
+  }, []);
+
+  const initializeApp = async () => {
+    try {
+      const [events, userTickets, teamMembers, jobPostings, analytics, lastSync] = await Promise.all([
+        MockApi.getEvents(),
+        MockApi.getUserTickets(),
+        MockApi.getTeamMembers(),
+        MockApi.getJobPostings(),
+        MockApi.getAnalytics(),
+        MockApi.getLastSyncTime(),
+      ]);
+
+      setState(prev => ({
+        ...prev,
+        events,
+        userTickets,
+        teamMembers,
+        jobPostings,
+        analytics,
+        lastSync,
+      }));
+    } catch (error) {
+      console.error('Error initializing app:', error);
+    }
+  };
+
+  const refreshEvents = async () => {
+    try {
+      const events = await MockApi.getEvents();
+      setState(prev => ({ ...prev, events }));
+    } catch (error) {
+      console.error('Error refreshing events:', error);
+    }
+  };
+
+  const refreshAttendees = async (eventId?: string) => {
+    try {
+      const attendees = await MockApi.getAttendees(eventId);
+      setState(prev => ({ ...prev, attendees }));
+    } catch (error) {
+      console.error('Error refreshing attendees:', error);
+    }
+  };
+
+  const refreshUserTickets = async () => {
+    try {
+      const userTickets = await MockApi.getUserTickets();
+      setState(prev => ({ ...prev, userTickets }));
+    } catch (error) {
+      console.error('Error refreshing user tickets:', error);
+    }
+  };
+
+  const refreshTeam = async () => {
+    try {
+      const teamMembers = await MockApi.getTeamMembers();
+      setState(prev => ({ ...prev, teamMembers }));
+    } catch (error) {
+      console.error('Error refreshing team:', error);
+    }
+  };
+
+  const refreshJobs = async () => {
+    try {
+      const jobPostings = await MockApi.getJobPostings();
+      setState(prev => ({ ...prev, jobPostings }));
+    } catch (error) {
+      console.error('Error refreshing jobs:', error);
+    }
+  };
+
+  const refreshAnalytics = async () => {
+    try {
+      const analytics = await MockApi.getAnalytics();
+      setState(prev => ({ ...prev, analytics }));
+    } catch (error) {
+      console.error('Error refreshing analytics:', error);
+    }
+  };
+
+  const purchaseTicket = async (eventId: string, ticketTypeId: string, attendeeInfo: any) => {
+    const ticket = await MockApi.purchaseTicket(eventId, ticketTypeId, attendeeInfo);
+    await refreshUserTickets();
+    await refreshEvents(); // Update sold count
+    return ticket;
+  };
+
+  const checkInAttendee = async (attendeeId: string) => {
+    const success = await MockApi.checkInAttendee(attendeeId);
+    if (success) {
+      await refreshAttendees();
+    }
+    return success;
+  };
+
+  const applyForJob = async (jobId: string, applicationData: any) => {
+    return await MockApi.applyForJob(jobId, applicationData);
+  };
+
+  const syncData = async () => {
+    try {
+      const success = await MockApi.syncData();
+      if (success) {
+        const lastSync = await MockApi.getLastSyncTime();
+        setState(prev => ({ ...prev, lastSync }));
+        await initializeApp(); // Refresh all data
+      }
+    } catch (error) {
+      console.error('Error syncing data:', error);
+    }
+  };
+
+  const contextValue: AppContextType = {
+    state,
+    refreshEvents,
+    refreshAttendees,
+    refreshUserTickets,
+    refreshTeam,
+    refreshJobs,
+    refreshAnalytics,
+    purchaseTicket,
+    checkInAttendee,
+    applyForJob,
+    syncData,
+  };
+
+  return (
+    <AppContext.Provider value={contextValue}>
+      {children}
+    </AppContext.Provider>
+  );
+};
+
 // Combined Context Provider
 export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
@@ -268,7 +456,9 @@ export const AppProviders = ({ children }: { children: ReactNode }) => {
       <LanguageProvider>
         <SidebarProvider>
           <LoadingProvider>
-            {children}
+            <AppProvider>
+              {children}
+            </AppProvider>
           </LoadingProvider>
         </SidebarProvider>
       </LanguageProvider>

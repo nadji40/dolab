@@ -1,18 +1,15 @@
-import { AppRegistry } from 'react-native';
-import { StrictMode } from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from './App';
+import React from 'react';
+import { AppRegistry, Platform } from 'react-native';
+import App from './App';
 
-const rootElement = document.getElementById('root');
-if (!rootElement) {
-  throw new Error('Root element #root not found');
+// Register the app for web
+if (Platform.OS === 'web') {
+  const rootTag = document.getElementById('root') || document.getElementById('app');
+  AppRegistry.registerComponent('DoLabEventManager', () => App);
+  AppRegistry.runApplication('DoLabEventManager', { rootTag });
+} else {
+  // For mobile platforms
+  AppRegistry.registerComponent('DoLabEventManager', () => App);
 }
 
-const root = ReactDOM.createRoot(rootElement);
-root.render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
-
-AppRegistry.registerComponent('App', () => App);
+export default App;

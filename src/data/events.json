@@ -1,0 +1,128 @@
+[
+  {
+    "id": "evt-001",
+    "name": {
+      "ar": "مؤتمر رؤية السعودية 2030",
+      "en": "Saudi Vision 2030 Conference"
+    },
+    "description": {
+      "ar": "مؤتمر استراتيجي يناقش مستقبل المملكة العربية السعودية وخطط التنمية المستدامة",
+      "en": "Strategic conference discussing the future of Saudi Arabia and sustainable development plans"
+    },
+    "date": "2024-12-15",
+    "time": "09:00",
+    "venue": {
+      "ar": "مركز الملك عبدالعزيز للمؤتمرات",
+      "en": "King Abdulaziz Conference Center"
+    },
+    "location": {
+      "city": {
+        "ar": "الرياض",
+        "en": "Riyadh"
+      },
+      "address": {
+        "ar": "حي الملز، الرياض 12211",
+        "en": "Al Malaz District, Riyadh 12211"
+      }
+    },
+    "category": "business",
+    "capacity": 2000,
+    "ticketsSold": 1750,
+    "revenue": 875000,
+    "status": "upcoming",
+    "image": "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800",
+    "organizer": {
+      "name": {
+        "ar": "وزارة الاقتصاد والتخطيط",
+        "en": "Ministry of Economy and Planning"
+      },
+      "type": "government"
+    },
+    "tickets": [
+      {
+        "id": "tkt-001-vip",
+        "name": {
+          "ar": "تذكرة كبار الشخصيات",
+          "en": "VIP Ticket"
+        },
+        "price": 1500,
+        "available": 50,
+        "sold": 45,
+        "features": {
+          "ar": ["مقاعد مميزة", "وجبة غداء فاخرة", "لقاء مع المتحدثين", "هدايا تذكارية"],
+          "en": ["Premium seating", "Luxury lunch", "Meet & greet with speakers", "Commemorative gifts"]
+        }
+      },
+      {
+        "id": "tkt-001-regular",
+        "name": {
+          "ar": "تذكرة عادية",
+          "en": "Regular Ticket"
+        },
+        "price": 500,
+        "available": 1500,
+        "sold": 1200,
+        "features": {
+          "ar": ["مقعد عادي", "استراحة قهوة", "مواد المؤتمر"],
+          "en": ["Standard seating", "Coffee break", "Conference materials"]
+        }
+      }
+    ]
+  },
+  {
+    "id": "evt-002",
+    "name": {
+      "ar": "مهرجان الجنادرية الثقافي",
+      "en": "Janadriyah Cultural Festival"
+    },
+    "description": {
+      "ar": "مهرجان ثقافي سنوي يحتفي بالتراث السعودي والثقافة العربية الأصيلة",
+      "en": "Annual cultural festival celebrating Saudi heritage and authentic Arab culture"
+    },
+    "date": "2024-11-20",
+    "time": "16:00",
+    "venue": {
+      "ar": "قرية الجنادرية التراثية",
+      "en": "Janadriyah Heritage Village"
+    },
+    "location": {
+      "city": {
+        "ar": "الرياض",
+        "en": "Riyadh"
+      },
+      "address": {
+        "ar": "شمال شرق الرياض، طريق الملك خالد",
+        "en": "Northeast Riyadh, King Khalid Road"
+      }
+    },
+    "category": "cultural",
+    "capacity": 5000,
+    "ticketsSold": 4200,
+    "revenue": 630000,
+    "status": "active",
+    "image": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800",
+    "organizer": {
+      "name": {
+        "ar": "وزارة الثقافة",
+        "en": "Ministry of Culture"
+      },
+      "type": "government"
+    },
+    "tickets": [
+      {
+        "id": "tkt-002-family",
+        "name": {
+          "ar": "تذكرة عائلية",
+          "en": "Family Ticket"
+        },
+        "price": 300,
+        "available": 2000,
+        "sold": 1800,
+        "features": {
+          "ar": ["دخول لـ 4 أشخاص", "أنشطة للأطفال", "وجبات تراثية"],
+          "en": ["Entry for 4 people", "Children activities", "Traditional meals"]
+        }
+      }
+    ]
+  }
+]
