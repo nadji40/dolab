@@ -17,6 +17,11 @@ const resources = {
       
       // Common
       'common.loading': 'Loading...',
+      'common.all': 'All',
+      'common.from': 'From',
+      'common.week': 'Week',
+      'common.month': 'Month',
+      'common.year': 'Year',
       'common.error': 'Error',
       'common.success': 'Success',
       'common.cancel': 'Cancel',
@@ -262,6 +267,11 @@ const resources = {
       
       // Common
       'common.loading': 'جاري التحميل...',
+      'common.all': 'الكل',
+      'common.from': 'من',
+      'common.week': 'أسبوع',
+      'common.month': 'شهر',
+      'common.year': 'سنة',
       'common.error': 'خطأ',
       'common.success': 'نجح',
       'common.cancel': 'إلغاء',

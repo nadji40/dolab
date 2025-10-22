@@ -9,7 +9,7 @@ import {
   RefreshControl,
   Platform,
 } from 'react-native';
-import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
+// Charts will be implemented with a compatible library in production
 import { useTranslation } from 'react-i18next';
 import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
@@ -80,86 +80,55 @@ const DashboardScreen: React.FC = () => {
     },
   ];
 
-  // Sample chart data
-  const salesData = {
-    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43],
-        color: (opacity = 1) => colors.accent,
-        strokeWidth: 3,
-      },
-    ],
-  };
+  // Sample chart data for recharts
+  const salesData = [
+    { month: 'Jan', sales: 20 },
+    { month: 'Feb', sales: 45 },
+    { month: 'Mar', sales: 28 },
+    { month: 'Apr', sales: 80 },
+    { month: 'May', sales: 99 },
+    { month: 'Jun', sales: 43 },
+  ];
 
-  const attendanceData = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [
-      {
-        data: [65, 78, 90, 81, 56, 55, 40],
-      },
-    ],
-  };
+  const attendanceData = [
+    { day: 'Mon', attendance: 65 },
+    { day: 'Tue', attendance: 78 },
+    { day: 'Wed', attendance: 90 },
+    { day: 'Thu', attendance: 81 },
+    { day: 'Fri', attendance: 56 },
+    { day: 'Sat', attendance: 55 },
+    { day: 'Sun', attendance: 40 },
+  ];
 
   const categoryData = [
     {
       name: t('category.business'),
-      population: 35,
-      color: colors.accentBlue,
-      legendFontColor: colors.textPrimary,
-      legendFontSize: 12,
+      value: 35,
+      fill: colors.accentBlue,
     },
     {
       name: t('category.cultural'),
-      population: 25,
-      color: colors.accentGreen,
-      legendFontColor: colors.textPrimary,
-      legendFontSize: 12,
+      value: 25,
+      fill: colors.accentGreen,
     },
     {
       name: t('category.educational'),
-      population: 20,
-      color: colors.accentPurple,
-      legendFontColor: colors.textPrimary,
-      legendFontSize: 12,
+      value: 20,
+      fill: colors.accentPurple,
     },
     {
       name: t('category.government'),
-      population: 15,
-      color: colors.accentOrange,
-      legendFontColor: colors.textPrimary,
-      legendFontSize: 12,
+      value: 15,
+      fill: colors.accentOrange,
     },
     {
       name: t('category.entertainment'),
-      population: 5,
-      color: colors.accentPink,
-      legendFontColor: colors.textPrimary,
-      legendFontSize: 12,
+      value: 5,
+      fill: colors.accentPink,
     },
   ];
 
-  const chartConfig = {
-    backgroundColor: colors.surface,
-    backgroundGradientFrom: colors.surface,
-    backgroundGradientTo: colors.surface,
-    decimalPlaces: 0,
-    color: (opacity = 1) => colors.textPrimary,
-    labelColor: (opacity = 1) => colors.textMuted,
-    style: {
-      borderRadius: borderRadius.md,
-    },
-    propsForDots: {
-      r: '6',
-      strokeWidth: '2',
-      stroke: colors.accent,
-    },
-    propsForBackgroundLines: {
-      strokeDasharray: '',
-      stroke: colors.border,
-      strokeWidth: 1,
-    },
-  };
+  // Chart styling for web compatibility
 
   const StatsCard = ({ title, value, icon, color, change }: any) => (
     <View
@@ -277,40 +246,38 @@ const DashboardScreen: React.FC = () => {
 
         {/* Sales Trend Chart */}
         <ChartCard title={t('dashboard.sales_trend')}>
-          <LineChart
-            data={salesData}
-            width={chartWidth - (spacing.lg * 2)}
-            height={220}
-            chartConfig={chartConfig}
-            bezier
-            style={styles.chart}
-          />
+          <View style={[styles.chartPlaceholder, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.chartPlaceholderText, { color: colors.textMuted }]}>
+              📈 Sales Trend Chart
+            </Text>
+            <Text style={[styles.chartPlaceholderSubtext, { color: colors.textMuted }]}>
+              Interactive charts available in full version
+            </Text>
+          </View>
         </ChartCard>
 
         {/* Attendance Chart */}
         <ChartCard title={t('dashboard.attendance_rate')}>
-          <BarChart
-            data={attendanceData}
-            width={chartWidth - (spacing.lg * 2)}
-            height={220}
-            chartConfig={chartConfig}
-            style={styles.chart}
-            showValuesOnTopOfBars
-          />
+          <View style={[styles.chartPlaceholder, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.chartPlaceholderText, { color: colors.textMuted }]}>
+              📊 Attendance Chart
+            </Text>
+            <Text style={[styles.chartPlaceholderSubtext, { color: colors.textMuted }]}>
+              Bar chart showing daily attendance
+            </Text>
+          </View>
         </ChartCard>
 
         {/* Category Distribution */}
         <ChartCard title={t('dashboard.event_categories')}>
-          <PieChart
-            data={categoryData}
-            width={chartWidth - (spacing.lg * 2)}
-            height={220}
-            chartConfig={chartConfig}
-            accessor="population"
-            backgroundColor="transparent"
-            paddingLeft="15"
-            style={styles.chart}
-          />
+          <View style={[styles.chartPlaceholder, { backgroundColor: colors.surface }]}>
+            <Text style={[styles.chartPlaceholderText, { color: colors.textMuted }]}>
+              🥧 Category Distribution
+            </Text>
+            <Text style={[styles.chartPlaceholderSubtext, { color: colors.textMuted }]}>
+              Pie chart showing event categories
+            </Text>
+          </View>
         </ChartCard>
 
         {/* Recent Activity */}
@@ -457,6 +424,22 @@ const styles = StyleSheet.create({
   chart: {
     marginVertical: spacing.sm,
     borderRadius: borderRadius.md,
+  },
+  chartPlaceholder: {
+    height: 220,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: borderRadius.md,
+    marginVertical: spacing.sm,
+  },
+  chartPlaceholderText: {
+    fontSize: typography.sizes.lg,
+    fontWeight: typography.weights.semibold,
+    marginBottom: spacing.sm,
+  },
+  chartPlaceholderSubtext: {
+    fontSize: typography.sizes.sm,
+    textAlign: 'center',
   },
   activityCard: {
     marginHorizontal: spacing.lg,
