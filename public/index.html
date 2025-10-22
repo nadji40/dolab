@@ -1,22 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CONVPILOT - Convertible Bonds Dashboard</title>
+    <title>دولاب المبدعين - Dolab Al-Mubdi'een</title>
+    
+    <!-- Cairo Font for Arabic -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Playfair Display for English -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <style>
       html, body, #root { height: 100%; margin: 0; }
       body { 
         background: #0a0a0a; 
-        font-family: 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+        font-family: 'Cairo', 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; 
+        direction: rtl;
+        text-align: right;
       }
       
-      /* Apply Playfair Display to all text elements */
+      /* Apply fonts with Arabic priority */
       * {
-        font-family: 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        font-family: 'Cairo', 'Playfair Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+      }
+      
+      /* Language-specific font classes */
+      .arabic-text {
+        font-family: 'Cairo', sans-serif;
+        direction: rtl;
+        text-align: right;
+      }
+      
+      .english-text {
+        font-family: 'Playfair Display', serif;
+        direction: ltr;
+        text-align: left;
+      }
+      
+      /* RTL/LTR utilities */
+      .rtl {
+        direction: rtl;
+        text-align: right;
+      }
+      
+      .ltr {
+        direction: ltr;
+        text-align: left;
+      }
+      
+      /* Glass effects */
+      .glass {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+      .glass-strong {
+        backdrop-filter: blur(30px);
+        -webkit-backdrop-filter: blur(30px);
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
       }
       
       /* Custom Scrollbar Styling */
@@ -26,50 +72,116 @@
       }
       
       ::-webkit-scrollbar-track {
-        background: #1a1a1a;
+        background: rgba(45, 64, 84, 0.1);
         border-radius: 4px;
       }
       
       ::-webkit-scrollbar-thumb {
-        background: #404040;
+        background: rgba(210, 157, 89, 0.6);
         border-radius: 4px;
-        border: 1px solid #333333;
+        border: 1px solid rgba(210, 157, 89, 0.3);
       }
       
       ::-webkit-scrollbar-thumb:hover {
-        background: #555555;
+        background: rgba(210, 157, 89, 0.8);
       }
       
       ::-webkit-scrollbar-corner {
-        background: #1a1a1a;
+        background: rgba(45, 64, 84, 0.1);
       }
       
       /* Light mode scrollbar */
       .light-theme ::-webkit-scrollbar-track {
-        background: #f1f3f4;
+        background: rgba(210, 157, 89, 0.1);
       }
       
       .light-theme ::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
-        border: 1px solid #dadce0;
+        background: rgba(45, 64, 84, 0.6);
+        border: 1px solid rgba(45, 64, 84, 0.3);
       }
       
       .light-theme ::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
+        background: rgba(45, 64, 84, 0.8);
       }
       
       .light-theme ::-webkit-scrollbar-corner {
-        background: #f1f3f4;
+        background: rgba(210, 157, 89, 0.1);
       }
       
       /* Firefox scrollbar */
       * {
         scrollbar-width: thin;
-        scrollbar-color: #404040 #1a1a1a;
+        scrollbar-color: rgba(210, 157, 89, 0.6) rgba(45, 64, 84, 0.1);
       }
       
       .light-theme * {
-        scrollbar-color: #c1c1c1 #f1f3f4;
+        scrollbar-color: rgba(45, 64, 84, 0.6) rgba(210, 157, 89, 0.1);
+      }
+      
+      /* Mobile Responsive Design */
+      @media (max-width: 768px) {
+        body {
+          font-size: 14px;
+        }
+        
+        .mobile-hidden {
+          display: none !important;
+        }
+        
+        .mobile-block {
+          display: block !important;
+        }
+        
+        .mobile-full-width {
+          width: 100% !important;
+          margin: 0 !important;
+        }
+        
+        .mobile-stack {
+          flex-direction: column !important;
+        }
+        
+        .mobile-padding {
+          padding: 12px !important;
+        }
+        
+        .mobile-text-small {
+          font-size: 12px !important;
+        }
+        
+        .mobile-chart-height {
+          height: 200px !important;
+        }
+      }
+      
+      @media (max-width: 480px) {
+        body {
+          font-size: 13px;
+        }
+        
+        .mobile-xs-padding {
+          padding: 8px !important;
+        }
+        
+        .mobile-xs-gap {
+          gap: 8px !important;
+        }
+        
+        .mobile-xs-text {
+          font-size: 11px !important;
+        }
+      }
+      
+      /* Touch-friendly interactions */
+      @media (hover: none) and (pointer: coarse) {
+        button, .touchable {
+          min-height: 44px;
+          min-width: 44px;
+        }
+        
+        .touch-padding {
+          padding: 12px 16px;
+        }
       }
       
       /* News ticker animation */
@@ -101,6 +213,15 @@
         }
         100% {
           transform: translateX(-100%);
+        }
+      }
+      
+      @keyframes slideLeftToRight {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
         }
       }
       

@@ -1,36 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { darkColors, lightColors } from '../theme';
-import { useTheme } from '../contexts/AppContext';
-import { HelpIcon } from './Icons';
+import { useTheme, useLanguage, useSidebar } from '../contexts/AppContext';
+import { HelpIcon, MenuIcon } from './Icons';
 import { TechnicalDocumentationModal } from './TechnicalDocumentationModal';
 
-const newsItems = [
-  "📈 European Central Bank holds rates steady at 4.5% amid inflation concerns",
-  "💼 Convertible bond issuance hits $180B globally in Q3 2024, up 15% YoY",
-  "🏦 Deutsche Bank launches new €2B convertible bond program",
-  "📊 S&P 500 reaches new highs as tech earnings beat expectations",
-  "💰 Credit Suisse CB index shows 8.2% returns this quarter",
-  "🌍 Asian markets rally on positive manufacturing data from China",
-  "⚡ Tesla announces $5B convertible bond offering for expansion",
-  "📉 Oil prices stabilize at $85/barrel after OPEC+ meeting",
-  "🏢 Microsoft acquires AI startup for $12B in mixed securities deal",
-  "💎 Gold futures climb to $2,100/oz on geopolitical tensions"
-];
+const newsItems = {
+  ar: [
+    "🎯 مؤتمر رؤية السعودية 2030 يحقق نجاحاً باهراً بحضور 2000 مشارك",
+    "🏛️ وزارة الثقافة تعلن عن إطلاق 15 فعالية ثقافية جديدة هذا الشهر",
+    "🚀 قمة نيوم للتكنولوجيا تستقطب أكثر من 1500 خبير تقني عالمي",
+    "📈 نمو قطاع الفعاليات السعودي بنسبة 25% مقارنة بالعام الماضي",
+    "🎪 مهرجان الجنادرية يسجل أعلى معدل حضور في تاريخه",
+    "💼 ملتقى ريادة الأعمال يحقق صفقات استثمارية بقيمة 500 مليون ريال",
+    "📚 معرض الكتاب الدولي يستقبل أكثر من 10 آلاف زائر يومياً",
+    "🎨 فعاليات موسم الرياض تحقق إقبالاً جماهيرياً كبيراً",
+    "🏆 المملكة تحتل المرتبة الأولى خليجياً في تنظيم المؤتمرات الدولية",
+    "🌟 إطلاق منصة دولاب المبدعين لإدارة الفعاليات بتقنيات متطورة"
+  ],
+  en: [
+    "🎯 Saudi Vision 2030 Conference achieves remarkable success with 2000 participants",
+    "🏛️ Ministry of Culture announces launch of 15 new cultural events this month",
+    "🚀 NEOM Technology Summit attracts over 1500 global tech experts",
+    "📈 Saudi events sector grows 25% compared to last year",
+    "🎪 Janadriyah Festival records highest attendance in its history",
+    "💼 Entrepreneurship Forum achieves investment deals worth 500 million SAR",
+    "📚 International Book Fair receives over 10,000 visitors daily",
+    "🎨 Riyadh Season events achieve massive public turnout",
+    "🏆 Kingdom ranks first in the Gulf for organizing international conferences",
+    "🌟 Launch of Dolab Al-Mubdi'een platform for event management with advanced technologies"
+  ]
+};
 
 export const NewsTickerBar = () => {
   const { isDark } = useTheme();
+  const { language, isRTL } = useLanguage();
+  const { toggleSidebar } = useSidebar();
   const colors = isDark ? darkColors : lightColors;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showDocumentation, setShowDocumentation] = useState(false);
+  
+  const currentNewsItems = newsItems[language];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % newsItems.length);
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % currentNewsItems.length);
     }, 6000); // Change news every 6 seconds for better readability
 
     return () => clearInterval(interval);
-  }, []);
+  }, [currentNewsItems.length]);
 
   return (
     <View style={{ position: 'relative' as any }}>
@@ -45,10 +63,24 @@ export const NewsTickerBar = () => {
         position: 'relative' as any,
       }}>
         <View style={{
-          flexDirection: 'row',
+          flexDirection: isRTL ? 'row-reverse' : 'row',
           alignItems: 'center',
           gap: 16,
         }}>
+          {/* Mobile menu button */}
+          <TouchableOpacity
+            onPress={toggleSidebar}
+            style={{
+              padding: 8,
+              borderRadius: 8,
+              backgroundColor: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+              display: 'none'
+            }}
+            className="mobile-block"
+          >
+            <MenuIcon size={20} color={colors.textSecondary} />
+          </TouchableOpacity>
+
           <View style={{
             flex: 1,
             overflow: 'hidden' as any,
@@ -58,18 +90,19 @@ export const NewsTickerBar = () => {
             <View style={{
               position: 'absolute' as any,
               top: 0,
-              left: 0,
-              right: 0,
-              animation: 'slideRightToLeft 25s linear infinite',
+              left: isRTL ? 'auto' : 0,
+              right: isRTL ? 0 : 'auto',
+              animation: isRTL ? 'slideLeftToRight 25s linear infinite' : 'slideRightToLeft 25s linear infinite',
             }}>
               <Text style={{
                 color: colors.textPrimary,
                 fontSize: 14,
-                fontFamily: 'Playfair Display',
+                fontFamily: language === 'ar' ? 'Cairo' : 'Playfair Display',
                 fontWeight: '500',
                 whiteSpace: 'nowrap' as any,
+                direction: isRTL ? 'rtl' : 'ltr',
               }}>
-                {newsItems.join(' • ')}
+                {currentNewsItems.join(' • ')}
               </Text>
             </View>
           </View>
@@ -83,8 +116,8 @@ export const NewsTickerBar = () => {
             <View style={{
               flexDirection: 'row',
               gap: 4,
-            }}>
-              {newsItems.map((_, index) => (
+            }} className="mobile-hidden">
+              {currentNewsItems.map((_, index) => (
                 <View
                   key={index}
                   style={{
@@ -92,7 +125,7 @@ export const NewsTickerBar = () => {
                     height: 6,
                     borderRadius: 3,
                     backgroundColor: index === currentIndex 
-                      ? colors.accentBlue 
+                      ? colors.accentGold 
                       : colors.textMuted,
                     opacity: index === currentIndex ? 1 : 0.3,
                   }}

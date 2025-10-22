@@ -10,12 +10,13 @@ interface ThemeContextType {
 }
 
 // Language types
-export type Language = 'en' | 'fr';
+export type Language = 'ar' | 'en';
 
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
   t: (key: string) => string;
+  isRTL: boolean;
 }
 
 // Sidebar types
@@ -59,83 +60,111 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
 // Language Context
 const translations = {
+  ar: {
+    // Navigation
+    'nav.navigation': 'التنقل',
+    'nav.overview': 'نظرة عامة',
+    'nav.events': 'الفعاليات',
+    'nav.tickets': 'التذاكر',
+    'nav.attendees': 'الحضور',
+    'nav.analytics': 'التحليلات',
+    'nav.staff': 'الموظفون',
+    'nav.venues': 'الأماكن',
+    
+    // Account
+    'account.messages': 'الرسائل',
+    'account.settings': 'الإعدادات',
+    'account.help': 'المساعدة',
+    'account.profile': 'الملف الشخصي',
+    
+    // Dashboard
+    'dashboard.total_events': 'إجمالي الفعاليات',
+    'dashboard.active_events': 'الفعاليات النشطة',
+    'dashboard.total_attendees': 'إجمالي الحضور',
+    'dashboard.revenue': 'الإيرادات',
+    'dashboard.upcoming_events': 'الفعاليات القادمة',
+    'dashboard.recent_registrations': 'التسجيلات الحديثة',
+    'dashboard.event_performance': 'أداء الفعاليات',
+    'dashboard.attendance_trends': 'اتجاهات الحضور',
+    'dashboard.revenue_breakdown': 'تفصيل الإيرادات',
+    
+    // Events
+    'events.create_event': 'إنشاء فعالية',
+    'events.event_name': 'اسم الفعالية',
+    'events.event_date': 'تاريخ الفعالية',
+    'events.venue': 'المكان',
+    'events.capacity': 'السعة',
+    'events.ticket_price': 'سعر التذكرة',
+    'events.description': 'الوصف',
+    'events.category': 'الفئة',
+    
+    // Tickets
+    'tickets.total_sold': 'إجمالي المبيعات',
+    'tickets.available': 'متاح',
+    'tickets.vip': 'كبار الشخصيات',
+    'tickets.regular': 'عادي',
+    'tickets.student': 'طلابي',
+    'tickets.early_bird': 'الطائر المبكر',
+    
+    // Other
+    'currency.sar': 'ريال سعودي',
+    'dark_mode': 'الوضع المظلم',
+    'light_mode': 'الوضع المضيء',
+    'welcome': 'مرحباً',
+    'system_name': 'دولاب المبدعين',
+  },
   en: {
     // Navigation
+    'nav.navigation': 'NAVIGATION',
     'nav.overview': 'OVERVIEW',
-    'nav.cb_report': 'CB Report',
-    'nav.market_report': 'Market Report',
-    'nav.favorites': 'Favorites',
-    'nav.performance': 'Performance',
-    'nav.performance_simulation': 'Performance Simulation',
+    'nav.events': 'Events',
+    'nav.tickets': 'Tickets',
+    'nav.attendees': 'Attendees',
+    'nav.analytics': 'Analytics',
+    'nav.staff': 'Staff',
+    'nav.venues': 'Venues',
     
     // Account
     'account.messages': 'Messages',
     'account.settings': 'Settings',
     'account.help': 'Help',
+    'account.profile': 'Profile',
     
     // Dashboard
-    'dashboard.market_cap': 'Market Cap: 43 Mds EUR',
-    'dashboard.1d_changes': '1D CHANGES +72,852,654.23 EUR',
-    'dashboard.one_day_changes': 'One day changes',
-    'dashboard.top_worst_performance': 'Top and Worst Performance of the Month',
-    'dashboard.inflows_outflows': 'Inflows/ outflows',
-    'dashboard.scatter_cb_universe': 'Scatter: CB universe',
-    'dashboard.profiles': 'Profiles',
-    'dashboard.market_cap_breakdown': 'Market Cap breakdown',
+    'dashboard.total_events': 'Total Events',
+    'dashboard.active_events': 'Active Events',
+    'dashboard.total_attendees': 'Total Attendees',
+    'dashboard.revenue': 'Revenue',
+    'dashboard.upcoming_events': 'Upcoming Events',
+    'dashboard.recent_registrations': 'Recent Registrations',
+    'dashboard.event_performance': 'Event Performance',
+    'dashboard.attendance_trends': 'Attendance Trends',
+    'dashboard.revenue_breakdown': 'Revenue Breakdown',
     
-    // Metrics
-    'metrics.cb_performance': 'CB Performance',
-    'metrics.equity_performance': 'Equity performance',
-    'metrics.delta_adjusted_performance': 'Delta adjusted performance',
-    'metrics.delta': 'Delta',
-    'metrics.vega': 'VEGA',
-    'metrics.ytm': 'YTM',
-    'metrics.prime': 'Prime',
-    'metrics.duration': 'Duration',
+    // Events
+    'events.create_event': 'Create Event',
+    'events.event_name': 'Event Name',
+    'events.event_date': 'Event Date',
+    'events.venue': 'Venue',
+    'events.capacity': 'Capacity',
+    'events.ticket_price': 'Ticket Price',
+    'events.description': 'Description',
+    'events.category': 'Category',
+    
+    // Tickets
+    'tickets.total_sold': 'Total Sold',
+    'tickets.available': 'Available',
+    'tickets.vip': 'VIP',
+    'tickets.regular': 'Regular',
+    'tickets.student': 'Student',
+    'tickets.early_bird': 'Early Bird',
     
     // Other
-    'currency.us_dollar': 'EUR',
+    'currency.sar': 'SAR',
     'dark_mode': 'Dark Mode',
     'light_mode': 'Light Mode',
-  },
-  fr: {
-    // Navigation
-    'nav.overview': 'VUE D\'ENSEMBLE',
-    'nav.cb_report': 'Rapport CB',
-    'nav.market_report': 'Rapport de marché',
-    'nav.favorites': 'Favoris',
-    'nav.performance': 'Performance',
-    'nav.performance_simulation': 'Simulation de performance',
-    
-    // Account
-    'account.messages': 'Messages',
-    'account.settings': 'Paramètres',
-    'account.help': 'Aide',
-    
-    // Dashboard
-    'dashboard.market_cap': 'Capitalisation: 43 Mds EUR',
-    'dashboard.1d_changes': 'CHANGEMENTS 1J +72,852,654.23 EUR',
-    'dashboard.one_day_changes': 'Changements d\'un jour',
-    'dashboard.top_worst_performance': 'Meilleures et pires performances du mois',
-    'dashboard.inflows_outflows': 'Entrées/sorties de fonds',
-    'dashboard.scatter_cb_universe': 'Nuage: univers CB',
-    'dashboard.profiles': 'Profils',
-    'dashboard.market_cap_breakdown': 'Répartition de la capitalisation',
-    
-    // Metrics
-    'metrics.cb_performance': 'Performance CB',
-    'metrics.equity_performance': 'Performance actions',
-    'metrics.delta_adjusted_performance': 'Performance ajustée delta',
-    'metrics.delta': 'Delta',
-    'metrics.vega': 'VEGA',
-    'metrics.ytm': 'TRM',
-    'metrics.prime': 'Prime',
-    'metrics.duration': 'Durée',
-    
-    // Other
-    'currency.us_dollar': 'Dollar US',
-    'dark_mode': 'Mode sombre',
-    'light_mode': 'Mode clair',
+    'welcome': 'Welcome',
+    'system_name': 'Dolab Al-Mubdi\'een',
   }
 };
 
@@ -150,14 +179,24 @@ export const useLanguage = () => {
 };
 
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>('ar');
 
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations['en']] || key;
+    return translations[language][key as keyof typeof translations['ar']] || key;
   };
 
+  const isRTL = language === 'ar';
+
+  // Update document direction when language changes
+  React.useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.dir = isRTL ? 'rtl' : 'ltr';
+      document.documentElement.lang = language;
+    }
+  }, [language, isRTL]);
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage, t, isRTL }}>
       {children}
     </LanguageContext.Provider>
   );

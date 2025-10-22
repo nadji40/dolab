@@ -70,7 +70,7 @@ interface SidebarProps {
 
 export function Sidebar({ children }: SidebarProps) {
   const { isDark, toggleTheme } = useTheme();
-  const { t, language, setLanguage } = useLanguage();
+  const { t, language, setLanguage, isRTL } = useLanguage();
   const { isCollapsed, toggleSidebar } = useSidebar();
   const colors = isDark ? darkColors : lightColors;
 
@@ -78,25 +78,33 @@ export function Sidebar({ children }: SidebarProps) {
   const activeIconColor = colors.textPrimary;
 
   return (
-    <View style={{
-      width: isCollapsed ? 80 : 280,
-      backgroundColor: isDark ? 'rgba(26, 26, 26, 0.8)' : 'rgba(248, 249, 250, 0.8)',
-      backdropFilter: 'blur(20px)',
-      WebkitBackdropFilter: 'blur(20px)',
-      borderRightColor: colors.border,
-      borderRightWidth: 1,
-      padding: isCollapsed ? 12 : 20,
-      gap: 24,
-      height: '100vh',
-      position: 'fixed' as any,
-      left: 0,
-      top: 0,
-      zIndex: 1000,
-      transition: 'width 0.3s ease',
-      boxShadow: isDark 
-        ? '0 8px 32px rgba(0, 0, 0, 0.37)' 
-        : '0 8px 32px rgba(31, 38, 135, 0.37)',
-    }}>
+    <View 
+      style={{
+        width: isCollapsed ? 80 : 280,
+        backgroundColor: isDark 
+          ? 'rgba(45, 64, 84, 0.15)' 
+          : 'rgba(210, 157, 89, 0.08)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
+        borderRightColor: isRTL ? 'transparent' : colors.border,
+        borderLeftColor: isRTL ? colors.border : 'transparent',
+        borderRightWidth: isRTL ? 0 : 1,
+        borderLeftWidth: isRTL ? 1 : 0,
+        padding: isCollapsed ? 12 : 20,
+        gap: 24,
+        height: '100vh',
+        position: 'fixed' as any,
+        left: isRTL ? 'auto' : 0,
+        right: isRTL ? 0 : 'auto',
+        top: 0,
+        zIndex: 1000,
+        transition: 'width 0.3s ease',
+        boxShadow: isDark 
+          ? '0 8px 32px rgba(210, 157, 89, 0.2)' 
+          : '0 8px 32px rgba(45, 64, 84, 0.15)',
+      }}
+      className="mobile-hidden"
+    >
       {/* Header with toggle */}
       <View style={{
         flexDirection: 'row',
@@ -105,15 +113,26 @@ export function Sidebar({ children }: SidebarProps) {
         paddingTop: 8,
       }}>
         {!isCollapsed && (
-          <Text style={{
-            color: colors.textPrimary,
-            fontSize: 18,
-            fontWeight: '900',
-            letterSpacing: 1,
-            fontFamily: 'Playfair Display',
-          }}>
-            CONVPILOT
-          </Text>
+          <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 12 }}>
+            <img 
+              src="https://eventdolab.com/assets/images/logo_maharat.png" 
+              alt="دولاب المبدعين" 
+              style={{ 
+                width: 32, 
+                height: 32, 
+                filter: isDark ? 'brightness(1)' : 'brightness(0.8)' 
+              }} 
+            />
+            <Text style={{
+              color: colors.textPrimary,
+              fontSize: 16,
+              fontWeight: '700',
+              fontFamily: language === 'ar' ? 'Cairo' : 'Playfair Display',
+              direction: isRTL ? 'rtl' : 'ltr',
+            }}>
+              {t('system_name')}
+            </Text>
+          </View>
         )}
         <TouchableOpacity 
           onPress={toggleSidebar} 
@@ -154,27 +173,27 @@ export function Sidebar({ children }: SidebarProps) {
         />
         <SidebarItem 
           icon={<ChartIcon size={20} color={iconColor} />} 
-          label={t('nav.cb_report')} 
+          label={t('nav.events')} 
           collapsed={isCollapsed}
         />
         <SidebarItem 
           icon={<ReportIcon size={20} color={iconColor} />} 
-          label={t('nav.market_report')} 
+          label={t('nav.tickets')} 
           collapsed={isCollapsed}
         />
         <SidebarItem 
           icon={<StarIcon size={20} color={iconColor} />} 
-          label={t('nav.favorites')} 
+          label={t('nav.attendees')} 
           collapsed={isCollapsed}
         />
         <SidebarItem 
           icon={<PerformanceIcon size={20} color={iconColor} />} 
-          label={t('nav.performance')} 
+          label={t('nav.analytics')} 
           collapsed={isCollapsed}
         />
         <SidebarItem 
           icon={<TargetIcon size={20} color={iconColor} />} 
-          label={t('nav.performance_simulation')} 
+          label={t('nav.staff')} 
           collapsed={isCollapsed}
         />
       </View>
@@ -214,25 +233,33 @@ export function Sidebar({ children }: SidebarProps) {
       {/* Language Selector */}
       {!isCollapsed && (
         <View style={{
-          backgroundColor: isDark ? 'rgba(22, 22, 22, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: colors.glass,
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
           borderColor: colors.border,
           borderWidth: 1,
           borderRadius: 12,
           padding: 12,
-          flexDirection: 'row',
+          flexDirection: isRTL ? 'row-reverse' : 'row',
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
           <TouchableOpacity
-            onPress={() => setLanguage(language === 'en' ? 'fr' : 'en')}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}
+            onPress={() => setLanguage(language === 'ar' ? 'en' : 'ar')}
+            style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 8 }}
           >
-            <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '500', fontFamily: 'Playfair Display' }}>
-              {language === 'en' ? 'English' : 'Français'}
+            <Text style={{ 
+              color: colors.textPrimary, 
+              fontSize: 14, 
+              fontWeight: '500', 
+              fontFamily: language === 'ar' ? 'Cairo' : 'Playfair Display',
+              direction: isRTL ? 'rtl' : 'ltr'
+            }}>
+              {language === 'ar' ? 'العربية' : 'English'}
             </Text>
-            <Text style={{ color: colors.textMuted, fontSize: 12, fontFamily: 'Playfair Display' }}>▼</Text>
+            <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+              {isRTL ? '▲' : '▼'}
+            </Text>
           </TouchableOpacity>
         </View>
       )}
@@ -240,21 +267,29 @@ export function Sidebar({ children }: SidebarProps) {
       {/* Currency Selector */}
       {!isCollapsed && (
         <View style={{
-          backgroundColor: isDark ? 'rgba(22, 22, 22, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: colors.glass,
           backdropFilter: 'blur(10px)',
           WebkitBackdropFilter: 'blur(10px)',
           borderColor: colors.border,
           borderWidth: 1,
           borderRadius: 12,
           padding: 12,
-          flexDirection: 'row',
+          flexDirection: isRTL ? 'row-reverse' : 'row',
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
-          <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '500', fontFamily: 'Playfair Display' }}>
-            {t('currency.us_dollar')}
+          <Text style={{ 
+            color: colors.textPrimary, 
+            fontSize: 14, 
+            fontWeight: '500', 
+            fontFamily: language === 'ar' ? 'Cairo' : 'Playfair Display',
+            direction: isRTL ? 'rtl' : 'ltr'
+          }}>
+            {t('currency.sar')}
           </Text>
-          <Text style={{ color: colors.textMuted, fontSize: 12, fontFamily: 'Playfair Display' }}>▼</Text>
+          <Text style={{ color: colors.textMuted, fontSize: 12 }}>
+            {isRTL ? '▲' : '▼'}
+          </Text>
         </View>
       )}
 
@@ -267,7 +302,13 @@ export function Sidebar({ children }: SidebarProps) {
         gap: isCollapsed ? 8 : 0,
       }}>
         {!isCollapsed && (
-          <Text style={{ color: colors.textPrimary, fontSize: 14, fontWeight: '500', fontFamily: 'Playfair Display' }}>
+          <Text style={{ 
+            color: colors.textPrimary, 
+            fontSize: 14, 
+            fontWeight: '500', 
+            fontFamily: language === 'ar' ? 'Cairo' : 'Playfair Display',
+            direction: isRTL ? 'rtl' : 'ltr'
+          }}>
             {isDark ? t('dark_mode') : t('light_mode')}
           </Text>
         )}
@@ -276,7 +317,7 @@ export function Sidebar({ children }: SidebarProps) {
           style={{
             width: 44,
             height: 24,
-            backgroundColor: isDark ? colors.accentGreen : colors.accentBlue,
+            backgroundColor: isDark ? colors.accentGold : colors.accentNavy,
             borderRadius: 12,
             padding: 2,
             alignItems: isDark ? 'flex-end' : 'flex-start',
