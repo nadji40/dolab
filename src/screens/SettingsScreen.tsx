@@ -9,13 +9,56 @@ import {
   Alert,
   Platform,
   Linking,
+  Animated,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
+import { RootStackParamList } from '../navigation/AppNavigator';
+
+type SettingsNavigationProp = StackNavigationProp<RootStackParamList>;
+
+// Custom Toggle Component for better web compatibility
+const CustomToggle = ({ 
+  value, 
+  onValueChange, 
+  trackColor, 
+  thumbColor 
+}: {
+  value: boolean;
+  onValueChange: (value: boolean) => void;
+  trackColor: { false: string; true: string };
+  thumbColor: string;
+}) => {
+  return (
+    <TouchableOpacity
+      style={[
+        styles.toggleContainer,
+        {
+          backgroundColor: value ? trackColor.true : trackColor.false,
+        }
+      ]}
+      onPress={() => onValueChange(!value)}
+      activeOpacity={0.8}
+    >
+      <View
+        style={[
+          styles.toggleThumb,
+          {
+            backgroundColor: thumbColor,
+            transform: [{ translateX: value ? 20 : 2 }],
+          }
+        ]}
+      />
+    </TouchableOpacity>
+  );
+};
 
 const SettingsScreen: React.FC = () => {
+  const navigation = useNavigation<SettingsNavigationProp>();
   const { t, i18n } = useTranslation();
   const { isDark, toggleTheme } = useTheme();
   const { language, setLanguage, isRTL } = useLanguage();
@@ -97,10 +140,15 @@ const SettingsScreen: React.FC = () => {
   };
 
   const SettingSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-    <View style={styles.section}>
-      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-        {title}
-      </Text>
+     <View style={styles.section}>
+       <Text style={[styles.sectionTitle, { 
+         color: colors.textPrimary,
+         marginLeft: isRTL ? 0 : spacing.lg,
+         marginRight: isRTL ? spacing.lg : 0,
+         textAlign: isRTL ? 'right' : 'left'
+       }]}>
+         {title}
+       </Text>
       <View
         style={[
           styles.sectionContent,
@@ -146,29 +194,38 @@ const SettingsScreen: React.FC = () => {
       onPress={onPress}
       disabled={!onPress}
     >
-      <View style={styles.settingLeft}>
-        <View style={styles.settingIcon}>{icon}</View>
-        <View style={styles.settingText}>
-          <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>
-            {title}
-          </Text>
-          {subtitle && (
-            <Text style={[styles.settingSubtitle, { color: colors.textMuted }]}>
-              {subtitle}
-            </Text>
-          )}
-        </View>
-      </View>
+       <View style={styles.settingLeft}>
+         <View style={styles.settingIcon}>{icon}</View>
+         <View style={styles.settingText}>
+           <Text style={[styles.settingTitle, { 
+             color: colors.textPrimary,
+             textAlign: isRTL ? 'right' : 'left'
+           }]}>
+             {title}
+           </Text>
+           {subtitle && (
+             <Text style={[styles.settingSubtitle, { 
+               color: colors.textMuted,
+               textAlign: isRTL ? 'right' : 'left'
+             }]}>
+               {subtitle}
+             </Text>
+           )}
+         </View>
+       </View>
       
       <View style={styles.settingRight}>
-        {rightElement}
-        {showArrow && (
-          <Ionicons
-            name={isRTL ? 'chevron-back-outline' : 'chevron-forward-outline'}
-            size={18}
-            color={colors.textMuted}
-          />
-        )}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {rightElement}
+          {showArrow && (
+            <Ionicons
+              name={isRTL ? 'chevron-back-outline' : 'chevron-forward-outline'}
+              size={18}
+              color={colors.textMuted}
+              style={{ marginLeft: spacing.sm }}
+            />
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -186,7 +243,7 @@ const SettingsScreen: React.FC = () => {
               John Doe
             </Text>
             <Text style={[styles.profileEmail, { color: colors.textMuted }]}>
-              john.doe@dolab.com
+              john.doe@eventdolab.com
             </Text>
           </View>
         </View>
@@ -198,7 +255,7 @@ const SettingsScreen: React.FC = () => {
             title={t('settings.theme')}
             subtitle={isDark ? t('settings.dark_mode') : t('settings.light_mode')}
             rightElement={
-              <Switch
+              <CustomToggle
                 value={isDark}
                 onValueChange={toggleTheme}
                 trackColor={{ false: colors.border, true: colors.accent }}
@@ -207,24 +264,34 @@ const SettingsScreen: React.FC = () => {
             }
           />
           
-          <SettingItem
-            icon={<Ionicons name="globe-outline" size={20} color={colors.textPrimary} />}
-            title={t('settings.language')}
-            subtitle={language === 'ar' ? 'العربية' : 'English'}
-            onPress={() => {
-              Alert.alert(
-                t('settings.select_language'),
-                undefined,
-                [
-                  { text: t('common.cancel'), style: 'cancel' },
-                  { text: 'العربية', onPress: () => handleLanguageChange('ar') },
-                  { text: 'English', onPress: () => handleLanguageChange('en') },
-                ]
-              );
-            }}
-            showArrow
-            isLast
-          />
+           <SettingItem
+             icon={<Ionicons name="globe-outline" size={20} color={colors.textPrimary} />}
+             title={t('settings.language')}
+             subtitle={language === 'ar' ? 'العربية' : 'English'}
+             onPress={() => {
+               if (Platform.OS === 'web') {
+                 // Web-specific language selection
+                 const userChoice = window.confirm(
+                   `${t('settings.select_language')}\n\nClick OK for العربية, Cancel for English`
+                 );
+                 handleLanguageChange(userChoice ? 'ar' : 'en');
+               } else {
+                 // Mobile Alert
+                 Alert.alert(
+                   t('settings.select_language'),
+                   '',
+                   [
+                     { text: t('common.cancel'), style: 'cancel' },
+                     { text: 'العربية', onPress: () => handleLanguageChange('ar') },
+                     { text: 'English', onPress: () => handleLanguageChange('en') },
+                   ],
+                   { cancelable: true }
+                 );
+               }
+             }}
+             showArrow
+             isLast
+           />
         </SettingSection>
 
         {/* Notifications */}
@@ -234,7 +301,7 @@ const SettingsScreen: React.FC = () => {
             title={t('settings.push_notifications')}
             subtitle={t('settings.receive_push')}
             rightElement={
-              <Switch
+              <CustomToggle
                 value={notifications}
                 onValueChange={setNotifications}
                 trackColor={{ false: colors.border, true: colors.accent }}
@@ -248,7 +315,7 @@ const SettingsScreen: React.FC = () => {
             title={t('settings.email_notifications')}
             subtitle={t('settings.receive_email')}
             rightElement={
-              <Switch
+              <CustomToggle
                 value={true}
                 onValueChange={() => {}}
                 trackColor={{ false: colors.border, true: colors.accent }}
@@ -281,7 +348,7 @@ const SettingsScreen: React.FC = () => {
             title={t('settings.auto_sync')}
             subtitle={t('settings.auto_sync_desc')}
             rightElement={
-              <Switch
+              <CustomToggle
                 value={autoSync}
                 onValueChange={setAutoSync}
                 trackColor={{ false: colors.border, true: colors.accent }}
@@ -344,14 +411,14 @@ const SettingsScreen: React.FC = () => {
           <SettingItem
             icon={<Ionicons name="document-text-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.terms')}
-            onPress={() => openURL('https://dolab.com/terms')}
+            onPress={() => openURL('https://eventdolab.com/terms')}
             showArrow
           />
           
           <SettingItem
             icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.privacy_policy')}
-            onPress={() => openURL('https://dolab.com/privacy')}
+            onPress={() => openURL('https://eventdolab.com/privacy')}
             showArrow
           />
           
@@ -359,14 +426,14 @@ const SettingsScreen: React.FC = () => {
             icon={<Ionicons name="briefcase-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.careers')}
             subtitle={t('settings.join_team')}
-            onPress={() => openURL('https://dolab.com/careers')}
+            onPress={() => openURL('https://eventdolab.com/careers')}
             showArrow
           />
           
           <SettingItem
             icon={<Ionicons name="globe-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.website')}
-            onPress={() => openURL('https://dolab.com')}
+            onPress={() => openURL('https://eventdolab.com')}
             showArrow
             isLast
           />
@@ -430,74 +497,69 @@ const styles = StyleSheet.create({
   avatarText: {
     fontSize: 32,
   },
-  profileName: {
-    fontSize: typography.sizes.xl,
-    fontWeight: typography.weights.semibold,
-    marginBottom: spacing.xs,
-  },
+   profileName: {
+     fontSize: typography.sizes.xl,
+     fontWeight: '600',
+     marginBottom: spacing.xs,
+   },
   profileEmail: {
     fontSize: typography.sizes.md,
   },
   section: {
     marginBottom: spacing.lg,
   },
-  sectionTitle: {
-    fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.semibold,
-    marginBottom: spacing.sm,
-    marginLeft: spacing.lg,
-  },
+   sectionTitle: {
+     fontSize: typography.sizes.lg,
+     fontWeight: '600',
+     marginBottom: spacing.sm,
+   },
   sectionContent: {
     marginHorizontal: spacing.lg,
     borderRadius: borderRadius.lg,
     borderWidth: 1,
     overflow: 'hidden',
   },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: spacing.md,
-    paddingHorizontal: spacing.lg,
-  },
-  settingLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-  },
-  settingIcon: {
-    fontSize: 20,
-    marginRight: spacing.md,
-    width: 24,
-    textAlign: 'center',
-  },
+   settingItem: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     paddingVertical: spacing.md,
+     paddingHorizontal: spacing.lg,
+   },
+   settingLeft: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     flex: 1,
+   },
+   settingIcon: {
+     width: 24,
+     alignItems: 'center',
+     justifyContent: 'center',
+     marginRight: spacing.md,
+   },
   settingText: {
     flex: 1,
   },
-  settingTitle: {
-    fontSize: typography.sizes.md,
-    fontWeight: typography.weights.medium,
-    marginBottom: spacing.xs,
-  },
+   settingTitle: {
+     fontSize: typography.sizes.md,
+     fontWeight: '500',
+     marginBottom: spacing.xs,
+   },
   settingSubtitle: {
     fontSize: typography.sizes.sm,
   },
-  settingRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  settingArrow: {
-    fontSize: 18,
-    marginLeft: spacing.sm,
-  },
-  syncingText: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
-  },
-  versionText: {
-    fontSize: typography.sizes.sm,
-    fontWeight: typography.weights.medium,
-  },
+   settingRight: {
+     flexDirection: 'row',
+     alignItems: 'center',
+     justifyContent: 'flex-end',
+   },
+   syncingText: {
+     fontSize: typography.sizes.sm,
+     fontWeight: '500',
+   },
+   versionText: {
+     fontSize: typography.sizes.sm,
+     fontWeight: '500',
+   },
   logoutSection: {
     paddingHorizontal: spacing.lg,
     marginBottom: spacing.lg,
@@ -507,11 +569,11 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     alignItems: 'center',
   },
-  logoutText: {
-    color: '#fff',
-    fontSize: typography.sizes.md,
-    fontWeight: typography.weights.semibold,
-  },
+   logoutText: {
+     color: '#fff',
+     fontSize: typography.sizes.md,
+     fontWeight: '600',
+   },
   footer: {
     alignItems: 'center',
     paddingHorizontal: spacing.lg,
@@ -521,6 +583,27 @@ const styles = StyleSheet.create({
     fontSize: typography.sizes.sm,
     textAlign: 'center',
     marginBottom: spacing.xs,
+  },
+  // Custom Toggle Styles
+  toggleContainer: {
+    width: 44,
+    height: 24,
+    borderRadius: 12,
+    justifyContent: 'center',
+    paddingHorizontal: 2,
+  },
+  toggleThumb: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+    elevation: 3,
   },
 });
 

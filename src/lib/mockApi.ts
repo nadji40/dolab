@@ -241,7 +241,7 @@ export class MockApi {
       {
         id: 'team-001',
         name: { ar: 'أحمد محمد العلي', en: 'Ahmed Mohammed Al-Ali' },
-        email: 'ahmed@dolab.com',
+        email: 'ahmed@eventdolab.com',
         role: { ar: 'مدير الفعاليات', en: 'Events Manager' },
         permissions: ['events.create', 'events.edit', 'attendees.view'],
         isActive: true
@@ -249,7 +249,7 @@ export class MockApi {
       {
         id: 'team-002',
         name: { ar: 'فاطمة سالم النحاس', en: 'Fatima Salem Al-Nahhas' },
-        email: 'fatima@dolab.com',
+        email: 'fatima@eventdolab.com',
         role: { ar: 'منسقة التسويق', en: 'Marketing Coordinator' },
         permissions: ['events.view', 'marketing.manage'],
         isActive: true
@@ -257,7 +257,7 @@ export class MockApi {
       {
         id: 'team-003',
         name: { ar: 'خالد عبدالله الشمري', en: 'Khalid Abdullah Al-Shammari' },
-        email: 'khalid@dolab.com',
+        email: 'khalid@eventdolab.com',
         role: { ar: 'مطور تطبيقات', en: 'App Developer' },
         permissions: ['system.admin', 'events.create', 'events.edit'],
         isActive: true

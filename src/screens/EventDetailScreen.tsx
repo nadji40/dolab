@@ -17,6 +17,7 @@ import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
 import { Event } from '../lib/mockApi';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { Ionicons } from '@expo/vector-icons';
 
 type EventDetailRouteProp = RouteProp<RootStackParamList, 'EventDetail'>;
 type EventDetailNavigationProp = StackNavigationProp<RootStackParamList, 'EventDetail'>;
@@ -63,7 +64,7 @@ const EventDetailScreen: React.FC = () => {
         } else {
           // Fallback for web browsers without Web Share API
           navigator.clipboard.writeText(message);
-          alert('Event details copied to clipboard!');
+          alert(t('event.share_copied'));
         }
       } else {
         await Share.share({
@@ -120,7 +121,7 @@ const EventDetailScreen: React.FC = () => {
     return (
       <View style={[styles.container, styles.centered, { backgroundColor: colors.background }]}>
         <Text style={[styles.errorText, { color: colors.textPrimary }]}>
-          Event not found
+          {t('event.not_found')}
         </Text>
       </View>
     );
@@ -153,7 +154,7 @@ const EventDetailScreen: React.FC = () => {
                 style={[styles.shareButton, { backgroundColor: colors.glass }]}
                 onPress={handleShare}
               >
-                <Text style={styles.shareIcon}>📤</Text>
+                <Ionicons name="share-outline" size={20} color="#fff" />
               </TouchableOpacity>
             </View>
           </View>
@@ -199,7 +200,7 @@ const EventDetailScreen: React.FC = () => {
             ]}
           >
             <View style={styles.infoItem}>
-              <Text style={styles.infoIcon}>📅</Text>
+              <Ionicons name="calendar-outline" size={24} color={colors.accent} style={styles.infoIcon} />
               <View style={styles.infoText}>
                 <Text style={[styles.infoLabel, { color: colors.textMuted }]}>
                   {t('event.date_time')}
@@ -214,7 +215,7 @@ const EventDetailScreen: React.FC = () => {
             </View>
 
             <View style={styles.infoItem}>
-              <Text style={styles.infoIcon}>📍</Text>
+              <Ionicons name="location-outline" size={24} color={colors.accent} style={styles.infoIcon} />
               <View style={styles.infoText}>
                 <Text style={[styles.infoLabel, { color: colors.textMuted }]}>
                   {t('event.venue')}
@@ -229,7 +230,7 @@ const EventDetailScreen: React.FC = () => {
             </View>
 
             <View style={styles.infoItem}>
-              <Text style={styles.infoIcon}>👥</Text>
+              <Ionicons name="people-outline" size={24} color={colors.accent} style={styles.infoIcon} />
               <View style={styles.infoText}>
                 <Text style={[styles.infoLabel, { color: colors.textMuted }]}>
                   {t('event.capacity')}
@@ -252,7 +253,7 @@ const EventDetailScreen: React.FC = () => {
             </View>
 
             <View style={styles.infoItem}>
-              <Text style={styles.infoIcon}>🏢</Text>
+              <Ionicons name="business-outline" size={24} color={colors.accent} style={styles.infoIcon} />
               <View style={styles.infoText}>
                 <Text style={[styles.infoLabel, { color: colors.textMuted }]}>
                   {t('event.organizer')}
@@ -362,7 +363,7 @@ const EventDetailScreen: React.FC = () => {
           <Text style={styles.buyButtonText}>
             {selectedTicket && selectedTicket.available > 0 
               ? t('event.buy_ticket') 
-              : 'Sold Out'
+              : t('common.sold_out')
             }
           </Text>
         </TouchableOpacity>
@@ -415,9 +416,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  shareIcon: {
-    fontSize: 20,
-  },
   content: {
     padding: spacing.lg,
   },
@@ -446,7 +444,6 @@ const styles = StyleSheet.create({
     marginBottom: spacing.lg,
   },
   infoIcon: {
-    fontSize: 24,
     marginRight: spacing.md,
     marginTop: spacing.xs,
   },

@@ -4,7 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { AppProviders } from './contexts/AppContext';
 import AppNavigator from './navigation/AppNavigator';
-import './lib/i18n'; // Initialize i18n
+import './locales/i18n'; // Initialize i18n
 
 // Web-specific imports
 if (Platform.OS === 'web') {

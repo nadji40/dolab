@@ -30,7 +30,9 @@ export type RootStackParamList = {
   Checkout: { eventId: string; ticketTypeId: string };
   Ticket: { ticketId: string };
   Attendees: { eventId?: string };
+  Jobs: undefined;
   JobDetail: { jobId: string };
+  Team: undefined;
 };
 
 export type AuthStackParamList = {
@@ -98,7 +100,7 @@ const AuthNavigator = () => {
       <AuthStack.Screen 
         name="Register" 
         component={RegisterScreen}
-        options={{ title: 'register' }}
+        options={({ }) => ({ title: t('auth.register') })}
       />
     </AuthStack.Navigator>
   );
@@ -159,7 +161,7 @@ const MainTabNavigator = () => {
         name="Home" 
         component={HomeScreen}
         options={{ 
-          title: t('nav.home'),
+      
           headerTitle: t('home.title'),
         }}
       />
@@ -167,7 +169,6 @@ const MainTabNavigator = () => {
         name="Dashboard" 
         component={DashboardScreen}
         options={{ 
-          title: t('nav.dashboard'),
           headerTitle: t('dashboard.title'),
         }}
       />
@@ -175,7 +176,6 @@ const MainTabNavigator = () => {
         name="CheckIn" 
         component={CheckInScreen}
         options={{ 
-          title: t('nav.checkin'),
           headerTitle: t('checkin.title'),
         }}
       />
@@ -183,7 +183,6 @@ const MainTabNavigator = () => {
         name="Settings" 
         component={SettingsScreen}
         options={{ 
-          title: t('nav.settings'),
           headerTitle: t('settings.title'),
         }}
       />
@@ -267,12 +266,22 @@ const AppNavigator = () => {
               options={{ title: t('attendees.title') }}
             />
             <Stack.Screen 
+              name="Jobs" 
+              component={JobsScreen}
+              options={{ title: t('jobs.title') }}
+            />
+            <Stack.Screen 
               name="JobDetail" 
               component={JobDetailScreen}
               options={{ 
-                title: t('jobs.title'),
+                title: t('jobs.view_details'),
                 presentation: 'modal',
               }}
+            />
+            <Stack.Screen 
+              name="Team" 
+              component={TeamScreen}
+              options={{ title: t('team.title') }}
             />
           </>
         ) : (
@@ -303,6 +312,8 @@ const styles = StyleSheet.create({
     paddingTop: spacing.sm,
     borderTopLeftRadius: borderRadius.lg,
     borderTopRightRadius: borderRadius.lg,
+	borderBottomLeftRadius: borderRadius.lg,
+	borderBottomRightRadius: borderRadius.lg,
     position: 'absolute',
     left: spacing.md,
     right: spacing.md,
