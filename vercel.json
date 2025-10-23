@@ -1,5 +1,5 @@
 {
-  "buildCommand": "bash -lc 'CI=1 npx expo export:web && cp -f public/sw.js web-build/sw.js && cp -f public/manifest.json web-build/manifest.json && cp -f assets/icons.png web-build/icons.png '",
+  "buildCommand": "bash -lc 'CI=1 npx expo export:web && cp -f public/sw.js web-build/sw.js && cp -f public/manifest.json web-build/manifest.json'",
   "outputDirectory": "web-build",
   "rewrites": [
     { "source": "/:username([a-zA-Z0-9_\\-\\.]{2,})", "destination": "/api/profile/:username" },
