@@ -10,6 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { LineChart, BarChart, PieChart } from 'react-native-chart-kit';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
@@ -53,28 +54,28 @@ const DashboardScreen: React.FC = () => {
     {
       title: t('dashboard.total_events'),
       value: analytics.totalEvents?.toString() || '0',
-      icon: '📊',
+      icon: <Ionicons name="calendar-outline" size={20} color={colors.textPrimary} />,
       color: colors.accentBlue,
       change: '+12%',
     },
     {
       title: t('dashboard.active_events'),
       value: analytics.activeEvents?.toString() || '0',
-      icon: '🎯',
+      icon: <Ionicons name="flash-outline" size={20} color={colors.textPrimary} />,
       color: colors.accentGreen,
       change: '+8%',
     },
     {
       title: t('dashboard.total_attendees'),
       value: analytics.totalAttendees?.toLocaleString() || '0',
-      icon: '👥',
+      icon: <Ionicons name="people-outline" size={20} color={colors.textPrimary} />,
       color: colors.accentPurple,
       change: '+25%',
     },
     {
       title: t('dashboard.revenue'),
       value: `${(analytics.totalRevenue / 1000000).toFixed(1)}M`,
-      icon: '💰',
+      icon: <Ionicons name="cash-outline" size={20} color={colors.textPrimary} />,
       color: colors.accent,
       change: '+18%',
     },
@@ -179,7 +180,7 @@ const DashboardScreen: React.FC = () => {
     >
       <View style={styles.statsHeader}>
         <View style={[styles.statsIcon, { backgroundColor: `${color}20` }]}>
-          <Text style={styles.statsIconText}>{icon}</Text>
+          {icon}
         </View>
         <View style={[styles.changeIndicator, { backgroundColor: colors.success }]}>
           <Text style={styles.changeText}>{change}</Text>

@@ -14,6 +14,7 @@ import { Camera } from 'expo-camera';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
+import { Ionicons } from '@expo/vector-icons';
 
 const { width, height } = Dimensions.get('window');
 
@@ -143,7 +144,7 @@ const CheckInScreen: React.FC = () => {
   if (hasPermission === false) {
     return (
       <View style={[styles.container, styles.centered, { backgroundColor: colors.background }]}>
-        <Text style={styles.permissionIcon}>📷</Text>
+        <Ionicons name="camera-outline" size={64} color={colors.textPrimary} />
         <Text style={[styles.permissionTitle, { color: colors.textPrimary }]}>
           {t('checkin.camera_permission')}
         </Text>
@@ -173,7 +174,7 @@ const CheckInScreen: React.FC = () => {
                 {t('checkin.scan_qr')}
               </Text>
               <Text style={[styles.scannerSubMessage, { color: colors.textMuted }]}>
-                Web QR scanning requires additional setup
+                {t('checkin.web_qr_note')}
               </Text>
             </View>
           ) : (
@@ -190,7 +191,7 @@ const CheckInScreen: React.FC = () => {
                 style={[styles.closeButton, { backgroundColor: colors.surface }]}
                 onPress={() => setScannerActive(false)}
               >
-                <Text style={[styles.closeButtonText, { color: colors.textPrimary }]}>✕</Text>
+                <Ionicons name="close-outline" size={20} color={colors.textPrimary} />
               </TouchableOpacity>
             </View>
             
@@ -216,7 +217,7 @@ const CheckInScreen: React.FC = () => {
               {t('checkin.title')}
             </Text>
             <Text style={[styles.subtitle, { color: colors.textMuted }]}>
-              Scan QR codes or enter ticket IDs manually
+              {t('checkin.instructions')}
             </Text>
           </View>
 
@@ -238,7 +239,7 @@ const CheckInScreen: React.FC = () => {
             onPress={startScanning}
             disabled={isProcessing}
           >
-            <Text style={styles.scanButtonIcon}>📱</Text>
+            <Ionicons name="qr-code-outline" size={48} color="#fff" />
             <Text style={[styles.scanButtonText, { color: '#fff' }]}>
               {t('checkin.scan_qr')}
             </Text>
@@ -315,7 +316,7 @@ const CheckInScreen: React.FC = () => {
             ]}
           >
             <Text style={[styles.recentTitle, { color: colors.textPrimary }]}>
-              Recent Check-ins
+              {t('checkin.recent')}
             </Text>
             
             {/* Mock recent check-ins */}
@@ -330,7 +331,7 @@ const CheckInScreen: React.FC = () => {
                     {new Date().toLocaleTimeString()}
                   </Text>
                 </View>
-                <Text style={styles.recentIcon}>✅</Text>
+                <Ionicons name="checkmark-circle-outline" size={16} color={colors.success} />
               </View>
             ))}
           </View>
@@ -359,7 +360,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: typography.sizes.xxl,
-    fontWeight: typography.weights.bold,
+    fontWeight: 'bold',
     marginBottom: spacing.sm,
   },
   subtitle: {
@@ -382,7 +383,7 @@ const styles = StyleSheet.create({
   },
   scanButtonText: {
     fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.semibold,
+    fontWeight: '600',
   },
   manualSection: {
     padding: spacing.lg,
@@ -392,7 +393,7 @@ const styles = StyleSheet.create({
   },
   manualTitle: {
     fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.semibold,
+    fontWeight: '600',
     marginBottom: spacing.md,
   },
   manualInput: {
@@ -411,7 +412,7 @@ const styles = StyleSheet.create({
   manualButtonText: {
     color: '#fff',
     fontSize: typography.sizes.md,
-    fontWeight: typography.weights.semibold,
+    fontWeight: '600',
   },
   recentSection: {
     padding: spacing.lg,
@@ -420,7 +421,7 @@ const styles = StyleSheet.create({
   },
   recentTitle: {
     fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.semibold,
+    fontWeight: '600',
     marginBottom: spacing.md,
   },
   recentItem: {
@@ -441,7 +442,7 @@ const styles = StyleSheet.create({
   },
   recentName: {
     fontSize: typography.sizes.md,
-    fontWeight: typography.weights.medium,
+    fontWeight: '500',
   },
   recentTime: {
     fontSize: typography.sizes.sm,
@@ -520,12 +521,12 @@ const styles = StyleSheet.create({
   },
   scannerInstructions: {
     fontSize: typography.sizes.lg,
-    fontWeight: typography.weights.medium,
+    fontWeight: '500',
     textAlign: 'center',
   },
   scannerMessage: {
     fontSize: typography.sizes.xl,
-    fontWeight: typography.weights.semibold,
+    fontWeight: '600',
     marginBottom: spacing.md,
   },
   scannerSubMessage: {
@@ -542,7 +543,7 @@ const styles = StyleSheet.create({
   },
   permissionTitle: {
     fontSize: typography.sizes.xl,
-    fontWeight: typography.weights.semibold,
+    fontWeight: '600',
     marginBottom: spacing.sm,
     textAlign: 'center',
   },
@@ -560,7 +561,7 @@ const styles = StyleSheet.create({
   permissionButtonText: {
     color: '#fff',
     fontSize: typography.sizes.md,
-    fontWeight: typography.weights.semibold,
+    fontWeight: '600',
   },
 });
 

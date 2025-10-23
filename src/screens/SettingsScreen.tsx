@@ -10,6 +10,7 @@ import {
   Platform,
   Linking,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
@@ -129,7 +130,7 @@ const SettingsScreen: React.FC = () => {
     showArrow = false,
     isLast = false 
   }: {
-    icon: string;
+    icon: React.ReactNode;
     title: string;
     subtitle?: string;
     onPress?: () => void;
@@ -146,7 +147,7 @@ const SettingsScreen: React.FC = () => {
       disabled={!onPress}
     >
       <View style={styles.settingLeft}>
-        <Text style={styles.settingIcon}>{icon}</Text>
+        <View style={styles.settingIcon}>{icon}</View>
         <View style={styles.settingText}>
           <Text style={[styles.settingTitle, { color: colors.textPrimary }]}>
             {title}
@@ -162,9 +163,11 @@ const SettingsScreen: React.FC = () => {
       <View style={styles.settingRight}>
         {rightElement}
         {showArrow && (
-          <Text style={[styles.settingArrow, { color: colors.textMuted }]}>
-            {isRTL ? '‹' : '›'}
-          </Text>
+          <Ionicons
+            name={isRTL ? 'chevron-back-outline' : 'chevron-forward-outline'}
+            size={18}
+            color={colors.textMuted}
+          />
         )}
       </View>
     </TouchableOpacity>
@@ -176,9 +179,9 @@ const SettingsScreen: React.FC = () => {
         {/* Profile Section */}
         <View style={styles.profileSection}>
           <View style={[styles.profileCard, { backgroundColor: colors.surface }]}>
-            <View style={[styles.avatar, { backgroundColor: colors.accent }]}>
-              <Text style={styles.avatarText}>👤</Text>
-            </View>
+          <View style={[styles.avatar, { backgroundColor: colors.accent }]}>
+            <Ionicons name="person" size={32} color="#fff" />
+          </View>
             <Text style={[styles.profileName, { color: colors.textPrimary }]}>
               John Doe
             </Text>
@@ -191,7 +194,7 @@ const SettingsScreen: React.FC = () => {
         {/* Appearance */}
         <SettingSection title={t('settings.appearance')}>
           <SettingItem
-            icon="🌙"
+            icon={<Ionicons name={isDark ? 'moon' : 'moon-outline'} size={20} color={colors.textPrimary} />}
             title={t('settings.theme')}
             subtitle={isDark ? t('settings.dark_mode') : t('settings.light_mode')}
             rightElement={
@@ -205,15 +208,15 @@ const SettingsScreen: React.FC = () => {
           />
           
           <SettingItem
-            icon="🌐"
+            icon={<Ionicons name="globe-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.language')}
             subtitle={language === 'ar' ? 'العربية' : 'English'}
             onPress={() => {
               Alert.alert(
-                t('settings.language'),
-                'Select Language / اختر اللغة',
+                t('settings.select_language'),
+                undefined,
                 [
-                  { text: 'Cancel / إلغاء', style: 'cancel' },
+                  { text: t('common.cancel'), style: 'cancel' },
                   { text: 'العربية', onPress: () => handleLanguageChange('ar') },
                   { text: 'English', onPress: () => handleLanguageChange('en') },
                 ]
@@ -227,9 +230,9 @@ const SettingsScreen: React.FC = () => {
         {/* Notifications */}
         <SettingSection title={t('settings.notifications')}>
           <SettingItem
-            icon="🔔"
+            icon={<Ionicons name="notifications-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.push_notifications')}
-            subtitle="Receive push notifications"
+            subtitle={t('settings.receive_push')}
             rightElement={
               <Switch
                 value={notifications}
@@ -241,9 +244,9 @@ const SettingsScreen: React.FC = () => {
           />
           
           <SettingItem
-            icon="📧"
+            icon={<Ionicons name="mail-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.email_notifications')}
-            subtitle="Receive email updates"
+            subtitle={t('settings.receive_email')}
             rightElement={
               <Switch
                 value={true}
@@ -257,11 +260,11 @@ const SettingsScreen: React.FC = () => {
         </SettingSection>
 
         {/* Data & Sync */}
-        <SettingSection title="Data & Sync">
+        <SettingSection title={t('settings.data_sync')}>
           <SettingItem
-            icon="🔄"
+            icon={<Ionicons name="refresh-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.sync')}
-            subtitle={state.lastSync ? `Last: ${new Date(state.lastSync).toLocaleString()}` : 'Never synced'}
+            subtitle={state.lastSync ? `${t('settings.last_prefix')}: ${new Date(state.lastSync).toLocaleString()}` : t('settings.never_synced')}
             onPress={handleSync}
             rightElement={
               isSyncing ? (
@@ -274,9 +277,9 @@ const SettingsScreen: React.FC = () => {
           />
           
           <SettingItem
-            icon="⚡"
+            icon={<Ionicons name="flash-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.auto_sync')}
-            subtitle="Automatically sync data"
+            subtitle={t('settings.auto_sync_desc')}
             rightElement={
               <Switch
                 value={autoSync}
@@ -288,9 +291,9 @@ const SettingsScreen: React.FC = () => {
           />
           
           <SettingItem
-            icon="🗑️"
+            icon={<Ionicons name="trash-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.clear_cache')}
-            subtitle="Free up storage space"
+            subtitle={t('settings.clear_cache_desc')}
             onPress={handleClearCache}
             showArrow
             isLast
@@ -300,25 +303,25 @@ const SettingsScreen: React.FC = () => {
         {/* Account */}
         <SettingSection title={t('settings.account')}>
           <SettingItem
-            icon="👤"
+            icon={<Ionicons name="person-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.profile')}
-            subtitle="Edit your profile"
+            subtitle={t('settings.profile_desc')}
             onPress={() => {}}
             showArrow
           />
           
           <SettingItem
-            icon="🔒"
+            icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.privacy')}
-            subtitle="Privacy settings"
+            subtitle={t('settings.privacy_desc')}
             onPress={() => {}}
             showArrow
           />
           
           <SettingItem
-            icon="🛡️"
+            icon={<Ionicons name="shield-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.security')}
-            subtitle="Security settings"
+            subtitle={t('settings.security_desc')}
             onPress={() => {}}
             showArrow
             isLast
@@ -328,41 +331,41 @@ const SettingsScreen: React.FC = () => {
         {/* About */}
         <SettingSection title={t('settings.about')}>
           <SettingItem
-            icon="ℹ️"
+            icon={<Ionicons name="information-circle-outline" size={20} color={colors.textPrimary} />}
             title={t('settings.version')}
             subtitle="1.0.0"
             rightElement={
               <Text style={[styles.versionText, { color: colors.textMuted }]}>
-                Latest
+                {t('settings.latest')}
               </Text>
             }
           />
           
           <SettingItem
-            icon="📄"
-            title="Terms of Service"
+            icon={<Ionicons name="document-text-outline" size={20} color={colors.textPrimary} />}
+            title={t('settings.terms')}
             onPress={() => openURL('https://dolab.com/terms')}
             showArrow
           />
           
           <SettingItem
-            icon="🔒"
-            title="Privacy Policy"
+            icon={<Ionicons name="lock-closed-outline" size={20} color={colors.textPrimary} />}
+            title={t('settings.privacy_policy')}
             onPress={() => openURL('https://dolab.com/privacy')}
             showArrow
           />
           
           <SettingItem
-            icon="💼"
-            title="Careers"
-            subtitle="Join our team"
+            icon={<Ionicons name="briefcase-outline" size={20} color={colors.textPrimary} />}
+            title={t('settings.careers')}
+            subtitle={t('settings.join_team')}
             onPress={() => openURL('https://dolab.com/careers')}
             showArrow
           />
           
           <SettingItem
-            icon="🌐"
-            title="Website"
+            icon={<Ionicons name="globe-outline" size={20} color={colors.textPrimary} />}
+            title={t('settings.website')}
             onPress={() => openURL('https://dolab.com')}
             showArrow
             isLast
@@ -387,7 +390,7 @@ const SettingsScreen: React.FC = () => {
             {t('system.copyright')}
           </Text>
           <Text style={[styles.footerText, { color: colors.textMuted }]}>
-            Made with ❤️ in Saudi Arabia
+            {t('system.made_in')}
           </Text>
         </View>
 

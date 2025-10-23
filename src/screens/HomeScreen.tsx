@@ -18,6 +18,7 @@ import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
 import { Event } from '../lib/mockApi';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { Ionicons } from '@expo/vector-icons';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
 
@@ -151,14 +152,14 @@ const HomeScreen: React.FC = () => {
           
           <View style={styles.eventMeta}>
             <View style={styles.metaItem}>
-              <Text style={styles.metaIcon}>📅</Text>
+              <Ionicons name="calendar-outline" size={14} color={colors.textMuted} style={{ marginRight: spacing.sm }} />
               <Text style={[styles.metaText, { color: colors.textMuted }]}>
                 {date} • {time}
               </Text>
             </View>
             
             <View style={styles.metaItem}>
-              <Text style={styles.metaIcon}>📍</Text>
+              <Ionicons name="location-outline" size={14} color={colors.textMuted} style={{ marginRight: spacing.sm }} />
               <Text style={[styles.metaText, { color: colors.textMuted }]} numberOfLines={1}>
                 {isRTL ? event.venue.ar : event.venue.en}
               </Text>
@@ -225,7 +226,7 @@ const HomeScreen: React.FC = () => {
         
         {/* Search */}
         <View style={[styles.searchContainer, { backgroundColor: colors.surfaceElev, borderColor: colors.border }]}>
-          <Text style={styles.searchIcon}>🔍</Text>
+          <Ionicons name="search-outline" size={16} color={colors.textMuted} style={{ marginRight: spacing.sm }} />
           <TextInput
             style={[styles.searchInput, { color: colors.textPrimary }]}
             placeholder={t('home.search_placeholder')}
@@ -310,7 +311,7 @@ const HomeScreen: React.FC = () => {
         {/* No Events */}
         {filteredEvents.length === 0 && (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>📅</Text>
+            <Ionicons name="calendar-outline" size={64} color={colors.textMuted} style={{ marginBottom: spacing.lg }} />
             <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
               {t('home.no_events')}
             </Text>

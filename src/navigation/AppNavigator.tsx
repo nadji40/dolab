@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View, Text, StyleSheet, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTheme, useLanguage } from '../contexts/AppContext';
 import { darkColors, lightColors, spacing, borderRadius, glassMorphism } from '../theme';
 
@@ -50,24 +51,17 @@ const Tab = createBottomTabNavigator<MainTabParamList>();
 
 // Custom Tab Bar Icon Component
 const TabIcon = ({ name, focused, color }: { name: string; focused: boolean; color: string }) => {
-  const getIcon = () => {
-    switch (name) {
-      case 'Home':
-        return focused ? '🏠' : '🏡';
-      case 'Dashboard':
-        return focused ? '📊' : '📈';
-      case 'CheckIn':
-        return focused ? '✅' : '☑️';
-      case 'Settings':
-        return focused ? '⚙️' : '🔧';
-      default:
-        return '📱';
-    }
+  const size = 22;
+  const iconByRoute: Record<string, { active: any; inactive: any }> = {
+    Home: { active: 'home', inactive: 'home-outline' },
+    Dashboard: { active: 'bar-chart', inactive: 'bar-chart-outline' },
+    CheckIn: { active: 'qr-code', inactive: 'qr-code-outline' },
+    Settings: { active: 'settings', inactive: 'settings-outline' },
   };
-
+  const iconName = (iconByRoute[name] || iconByRoute.Home)[focused ? 'active' : 'inactive'];
   return (
     <View style={styles.tabIconContainer}>
-      <Text style={[styles.tabIcon, { color }]}>{getIcon()}</Text>
+      <Ionicons name={iconName} size={size} color={color} />
     </View>
   );
 };
@@ -104,7 +98,7 @@ const AuthNavigator = () => {
       <AuthStack.Screen 
         name="Register" 
         component={RegisterScreen}
-        options={{ title: 'Create Account' }}
+        options={{ title: 'register' }}
       />
     </AuthStack.Navigator>
   );
