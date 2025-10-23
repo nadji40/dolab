@@ -1,11 +1,31 @@
 {
-  "version": 2,
-  "installCommand": "npm ci --no-audit --no-fund",
-  "buildCommand": "npm run build",
-  "devCommand": "npm run dev",
-  "outputDirectory": "dist",
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
+  "buildCommand": "bash -lc 'CI=1 npx expo export:web && cp -f public/sw.js web-build/sw.js && cp -f public/manifest.json web-build/manifest.json && cp -f assets/icons.png web-build/icons.png '",
+  "outputDirectory": "web-build",
+  "rewrites": [
+    { "source": "/:username([a-zA-Z0-9_\\-\\.]{2,})", "destination": "/api/profile/:username" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" },
+        { "key": "Service-Worker-Allowed", "value": "/" }
+      ]
+    },
+    {
+      "source": "/download/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=3600, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/:path*\\.(js|css|png|jpg|jpeg|gif|ico|svg)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, immutable" }
+      ]
+    }
   ]
 }
+
+
