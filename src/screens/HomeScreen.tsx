@@ -15,10 +15,11 @@ import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useLanguage, useApp } from '../contexts/AppContext';
-import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow } from '../theme';
+import { darkColors, lightColors, spacing, borderRadius, typography, glassMorphism, shadow, responsive } from '../theme';
 import { Event } from '../lib/mockApi';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { Ionicons } from '@expo/vector-icons';
+import ResponsiveGrid from '../components/ResponsiveGrid';
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Main'>;
 
@@ -290,9 +291,11 @@ const HomeScreen: React.FC = () => {
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               {t('home.active_events')}
             </Text>
-            {activeEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
+            <ResponsiveGrid minItemWidth={320}>
+              {activeEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </ResponsiveGrid>
           </View>
         )}
 
@@ -302,9 +305,11 @@ const HomeScreen: React.FC = () => {
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               {t('home.upcoming_events')}
             </Text>
-            {upcomingEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
+            <ResponsiveGrid minItemWidth={320}>
+              {upcomingEvents.map((event) => (
+                <EventCard key={event.id} event={event} />
+              ))}
+            </ResponsiveGrid>
           </View>
         )}
 
@@ -409,6 +414,8 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
     overflow: 'hidden',
     borderWidth: 1,
+    width: '100%',
+    maxWidth: 400,
   },
   eventImage: {
     width: '100%',

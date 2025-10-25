@@ -86,6 +86,14 @@ const EventDetailScreen: React.FC = () => {
     });
   };
 
+  const handleOrganizerPress = () => {
+    if (!event) return;
+    
+    navigation.navigate('OrganizerProfile', {
+      organizerId: event.organizer.id,
+    });
+  };
+
   const formatDate = (dateString: string, timeString: string) => {
     const date = new Date(dateString);
     return {
@@ -252,17 +260,21 @@ const EventDetailScreen: React.FC = () => {
               </View>
             </View>
 
-            <View style={styles.infoItem}>
+            <TouchableOpacity style={styles.infoItem} onPress={handleOrganizerPress}>
               <Ionicons name="business-outline" size={24} color={colors.accent} style={styles.infoIcon} />
               <View style={styles.infoText}>
                 <Text style={[styles.infoLabel, { color: colors.textMuted }]}>
                   {t('event.organizer')}
                 </Text>
-                <Text style={[styles.infoValue, { color: colors.textPrimary }]}>
+                <Text style={[styles.infoValue, { color: colors.accent }]}>
                   {isRTL ? event.organizer.name.ar : event.organizer.name.en}
                 </Text>
+                <Text style={[styles.infoSubValue, { color: colors.textMuted }]}>
+                  {t(`organizer.type.${event.organizer.type}`)} • {t('common.tap_to_view')}
+                </Text>
               </View>
-            </View>
+              <Ionicons name="chevron-forward-outline" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
           </View>
 
           {/* Tickets */}

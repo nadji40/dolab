@@ -33,11 +33,42 @@ export interface Event {
   status: 'upcoming' | 'active' | 'completed' | 'cancelled';
   image: string;
   organizer: {
+    id: string;
     name: {
       ar: string;
       en: string;
     };
     type: 'company' | 'government' | 'university' | 'individual';
+    bio?: {
+      ar: string;
+      en: string;
+    };
+    logo?: string;
+    website?: string;
+    email?: string;
+    phone?: string;
+    socialLinks?: {
+      twitter?: string;
+      linkedin?: string;
+      instagram?: string;
+      facebook?: string;
+    };
+    address?: {
+      ar: string;
+      en: string;
+    };
+    establishedYear?: number;
+    teamSize?: number;
+    specialties?: {
+      ar: string[];
+      en: string[];
+    };
+    stats?: {
+      totalEvents: number;
+      totalAttendees: number;
+      averageRating: number;
+      yearsActive: number;
+    };
   };
   tickets: TicketType[];
 }
@@ -55,6 +86,61 @@ export interface TicketType {
     ar: string[];
     en: string[];
   };
+}
+
+export interface Organizer {
+  id: string;
+  name: {
+    ar: string;
+    en: string;
+  };
+  type: 'company' | 'government' | 'university' | 'individual';
+  bio?: {
+    ar: string;
+    en: string;
+  };
+  logo?: string;
+  website?: string;
+  email?: string;
+  phone?: string;
+  socialLinks?: {
+    twitter?: string;
+    linkedin?: string;
+    instagram?: string;
+    facebook?: string;
+  };
+  address?: {
+    ar: string;
+    en: string;
+  };
+  establishedYear?: number;
+  teamSize?: number;
+  specialties?: {
+    ar: string[];
+    en: string[];
+  };
+  stats?: {
+    totalEvents: number;
+    totalAttendees: number;
+    averageRating: number;
+    yearsActive: number;
+  };
+  posts?: OrganizerPost[];
+}
+
+export interface OrganizerPost {
+  id: string;
+  title: {
+    ar: string;
+    en: string;
+  };
+  content: {
+    ar: string;
+    en: string;
+  };
+  image?: string;
+  publishedDate: string;
+  tags?: string[];
 }
 
 export interface Attendee {
@@ -115,11 +201,56 @@ export const saudiEvents: Event[] = [
     status: 'upcoming',
     image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800',
     organizer: {
+      id: 'org-001',
       name: {
         ar: 'وزارة الاقتصاد والتخطيط',
         en: 'Ministry of Economy and Planning'
       },
-      type: 'government'
+      type: 'government',
+      bio: {
+        ar: 'وزارة الاقتصاد والتخطيط هي الجهة المسؤولة عن وضع السياسات الاقتصادية والتنموية في المملكة العربية السعودية',
+        en: 'The Ministry of Economy and Planning is responsible for setting economic and development policies in Saudi Arabia'
+      },
+      logo: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200',
+      website: 'https://mep.gov.sa',
+      email: 'info@mep.gov.sa',
+      phone: '+966-11-4014444',
+      socialLinks: {
+        twitter: 'https://twitter.com/mep_saudi',
+        linkedin: 'https://linkedin.com/company/mep-saudi'
+      },
+      address: {
+        ar: 'الرياض، المملكة العربية السعودية',
+        en: 'Riyadh, Saudi Arabia'
+      },
+      establishedYear: 1975,
+      teamSize: 500,
+      specialties: {
+        ar: ['التخطيط الاقتصادي', 'السياسات التنموية', 'رؤية 2030'],
+        en: ['Economic Planning', 'Development Policies', 'Vision 2030']
+      },
+      stats: {
+        totalEvents: 45,
+        totalAttendees: 25000,
+        averageRating: 4.8,
+        yearsActive: 48
+      },
+      posts: [
+        {
+          id: 'post-001',
+          title: {
+            ar: 'إطلاق مبادرة جديدة لدعم الشركات الناشئة',
+            en: 'Launching New Initiative to Support Startups'
+          },
+          content: {
+            ar: 'أعلنت وزارة الاقتصاد والتخطيط عن إطلاق مبادرة جديدة لدعم الشركات الناشئة في إطار رؤية 2030',
+            en: 'The Ministry of Economy and Planning announced the launch of a new initiative to support startups as part of Vision 2030'
+          },
+          image: 'https://images.unsplash.com/photo-1556761175-b413da4baf72?w=400',
+          publishedDate: '2024-10-20',
+          tags: ['startups', 'vision2030', 'economy']
+        }
+      ]
     },
     tickets: [
       {

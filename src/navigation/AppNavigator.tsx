@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { View, Text, StyleSheet, Platform } from 'react-native';
+import { View, Text, StyleSheet, Platform, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme, useLanguage } from '../contexts/AppContext';
-import { darkColors, lightColors, spacing, borderRadius, glassMorphism } from '../theme';
+import { darkColors, lightColors, spacing, borderRadius, glassMorphism, responsive } from '../theme';
+import ResponsiveLayout from '../components/ResponsiveLayout';
 
 // Import screens (we'll create these next)
 import HomeScreen from '../screens/HomeScreen';
@@ -21,6 +22,7 @@ import LoginScreen from '../screens/auth/LoginScreen';
 import RegisterScreen from '../screens/auth/RegisterScreen';
 import JobsScreen from '../screens/JobsScreen';
 import JobDetailScreen from '../screens/JobDetailScreen';
+import OrganizerProfileScreen from '../screens/OrganizerProfileScreen';
 
 // Navigation types
 export type RootStackParamList = {
@@ -33,6 +35,7 @@ export type RootStackParamList = {
   Jobs: undefined;
   JobDetail: { jobId: string };
   Team: undefined;
+  OrganizerProfile: { organizerId: string };
 };
 
 export type AuthStackParamList = {
@@ -43,6 +46,7 @@ export type AuthStackParamList = {
 export type MainTabParamList = {
   Home: undefined;
   Dashboard: undefined;
+  Jobs: undefined;
   CheckIn: undefined;
   Settings: undefined;
 };
@@ -57,6 +61,7 @@ const TabIcon = ({ name, focused, color }: { name: string; focused: boolean; col
   const iconByRoute: Record<string, { active: any; inactive: any }> = {
     Home: { active: 'home', inactive: 'home-outline' },
     Dashboard: { active: 'bar-chart', inactive: 'bar-chart-outline' },
+    Jobs: { active: 'briefcase', inactive: 'briefcase-outline' },
     CheckIn: { active: 'qr-code', inactive: 'qr-code-outline' },
     Settings: { active: 'settings', inactive: 'settings-outline' },
   };
@@ -100,7 +105,7 @@ const AuthNavigator = () => {
       <AuthStack.Screen 
         name="Register" 
         component={RegisterScreen}
-        options={({ }) => ({ title: t('auth.register') })}
+        options={{ title: 'Register' }}
       />
     </AuthStack.Navigator>
   );
@@ -112,6 +117,34 @@ const MainTabNavigator = () => {
   const { t, isRTL } = useLanguage();
   const colors = isDark ? darkColors : lightColors;
   const glassStyle = isDark ? glassMorphism.dark : glassMorphism.light;
+  
+  const [screenData, setScreenData] = useState(Dimensions.get('window'));
+  const [currentRoute, setCurrentRoute] = useState('Home');
+
+  useEffect(() => {
+    const onChange = (result: { window: any }) => {
+      setScreenData(result.window);
+    };
+
+    const subscription = Dimensions.addEventListener('change', onChange);
+    return () => subscription?.remove();
+  }, []);
+
+  const isDesktop = responsive.isDesktop(screenData.width);
+
+  // Create a wrapper component for each screen
+  const ScreenWrapper = ({ children, routeName }: { children: React.ReactNode; routeName: string }) => (
+    <ResponsiveLayout
+      activeRoute={currentRoute}
+      onNavigate={(route) => {
+        setCurrentRoute(route);
+        // Navigate to the route - we'll handle this through the tab navigator
+      }}
+      showSidebar={isDesktop}
+    >
+      {children}
+    </ResponsiveLayout>
+  );
 
   return (
     <Tab.Navigator
@@ -126,6 +159,7 @@ const MainTabNavigator = () => {
           {
             backgroundColor: Platform.OS === 'web' ? glassStyle.backgroundColor : colors.surface,
             borderTopColor: colors.border,
+            display: isDesktop ? 'none' : 'flex', // Hide tab bar on desktop
             ...(Platform.OS === 'web' && {
               backdropFilter: glassStyle.backdropFilter,
               borderWidth: glassStyle.borderWidth,
@@ -143,6 +177,7 @@ const MainTabNavigator = () => {
           borderBottomWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
+          display: isDesktop ? 'none' : 'flex', // Hide header on desktop
           ...(Platform.OS === 'web' && {
             backdropFilter: glassStyle.backdropFilter,
             borderWidth: glassStyle.borderWidth,
@@ -156,36 +191,73 @@ const MainTabNavigator = () => {
           textAlign: isRTL ? 'right' : 'left',
         },
       })}
+      screenListeners={{
+        tabPress: (e) => {
+          const routeName = e.target?.split('-')[0] || 'Home';
+          setCurrentRoute(routeName);
+        },
+      }}
     >
       <Tab.Screen 
         name="Home" 
-        component={HomeScreen}
         options={{ 
-      
           headerTitle: t('home.title'),
         }}
-      />
+      >
+        {() => (
+          <ScreenWrapper routeName="Home">
+            <HomeScreen />
+          </ScreenWrapper>
+        )}
+      </Tab.Screen>
       <Tab.Screen 
         name="Dashboard" 
-        component={DashboardScreen}
         options={{ 
           headerTitle: t('dashboard.title'),
         }}
-      />
+      >
+        {() => (
+          <ScreenWrapper routeName="Dashboard">
+            <DashboardScreen />
+          </ScreenWrapper>
+        )}
+      </Tab.Screen>
+      <Tab.Screen 
+        name="Jobs" 
+        options={{ 
+          headerTitle: t('jobs.title'),
+        }}
+      >
+        {() => (
+          <ScreenWrapper routeName="Jobs">
+            <JobsScreen />
+          </ScreenWrapper>
+        )}
+      </Tab.Screen>
       <Tab.Screen 
         name="CheckIn" 
-        component={CheckInScreen}
         options={{ 
           headerTitle: t('checkin.title'),
         }}
-      />
+      >
+        {() => (
+          <ScreenWrapper routeName="CheckIn">
+            <CheckInScreen />
+          </ScreenWrapper>
+        )}
+      </Tab.Screen>
       <Tab.Screen 
         name="Settings" 
-        component={SettingsScreen}
         options={{ 
           headerTitle: t('settings.title'),
         }}
-      />
+      >
+        {() => (
+          <ScreenWrapper routeName="Settings">
+            <SettingsScreen />
+          </ScreenWrapper>
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };
@@ -282,6 +354,11 @@ const AppNavigator = () => {
               name="Team" 
               component={TeamScreen}
               options={{ title: t('team.title') }}
+            />
+            <Stack.Screen 
+              name="OrganizerProfile" 
+              component={OrganizerProfileScreen}
+              options={{ title: t('organizer.profile') }}
             />
           </>
         ) : (

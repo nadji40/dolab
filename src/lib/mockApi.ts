@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { saudiEvents, sampleAttendees, eventAnalytics } from '../data/saudiEvents';
+import { saudiEvents, sampleAttendees, eventAnalytics, Organizer, OrganizerPost } from '../data/saudiEvents';
 import eventsData from '../data/events.json';
 
 // Types
@@ -21,8 +21,30 @@ export interface Event {
   status: 'upcoming' | 'active' | 'completed' | 'cancelled';
   image: string;
   organizer: {
+    id: string;
     name: { ar: string; en: string };
     type: 'company' | 'government' | 'university' | 'individual';
+    bio?: { ar: string; en: string };
+    logo?: string;
+    website?: string;
+    email?: string;
+    phone?: string;
+    socialLinks?: {
+      twitter?: string;
+      linkedin?: string;
+      instagram?: string;
+      facebook?: string;
+    };
+    address?: { ar: string; en: string };
+    establishedYear?: number;
+    teamSize?: number;
+    specialties?: { ar: string[]; en: string[] };
+    stats?: {
+      totalEvents: number;
+      totalAttendees: number;
+      averageRating: number;
+      yearsActive: number;
+    };
   };
   tickets: TicketType[];
 }
@@ -87,6 +109,13 @@ export interface JobPosting {
   postedDate: string;
   deadline: string;
   status: 'active' | 'closed' | 'draft';
+  organizer: {
+    id: string;
+    name: { ar: string; en: string };
+    type: 'company' | 'government' | 'university' | 'individual';
+    logo?: string;
+    website?: string;
+  };
 }
 
 // Simulate network latency
@@ -273,6 +302,40 @@ export class MockApi {
     }
   }
 
+  // Organizer API
+  static async getOrganizer(organizerId: string): Promise<Organizer | null> {
+    await delay();
+    
+    // Find organizer from events data
+    const event = saudiEvents.find(e => e.organizer.id === organizerId);
+    if (event) {
+      return {
+        id: event.organizer.id,
+        name: event.organizer.name,
+        type: event.organizer.type,
+        bio: event.organizer.bio,
+        logo: event.organizer.logo,
+        website: event.organizer.website,
+        email: event.organizer.email,
+        phone: event.organizer.phone,
+        socialLinks: event.organizer.socialLinks,
+        address: event.organizer.address,
+        establishedYear: event.organizer.establishedYear,
+        teamSize: event.organizer.teamSize,
+        specialties: event.organizer.specialties,
+        stats: event.organizer.stats,
+        posts: event.organizer.posts,
+      };
+    }
+    
+    return null;
+  }
+
+  static async getOrganizerEvents(organizerId: string): Promise<Event[]> {
+    await delay();
+    return saudiEvents.filter(event => event.organizer.id === organizerId);
+  }
+
   // Jobs/HR API
   static async getJobPostings(): Promise<JobPosting[]> {
     await delay();
@@ -299,7 +362,14 @@ export class MockApi {
         salary: { min: 8000, max: 15000, currency: 'SAR' },
         postedDate: '2024-10-15',
         deadline: '2024-12-15',
-        status: 'active'
+        status: 'active',
+        organizer: {
+          id: 'org-tech-001',
+          name: { ar: 'شركة التقنيات المتقدمة', en: 'Advanced Tech Solutions' },
+          type: 'company',
+          logo: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=200',
+          website: 'https://advancedtech.sa'
+        }
       },
       {
         id: 'job-002',

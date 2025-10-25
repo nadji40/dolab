@@ -162,6 +162,23 @@ export const layout = {
     height: 60,
     mobileHeight: 56,
   },
+  sidebar: {
+    width: 280,
+    collapsedWidth: 80,
+  },
+  grid: {
+    columns: {
+      mobile: 1,
+      tablet: 2,
+      desktop: 3,
+      wide: 4,
+    },
+    gap: {
+      mobile: spacing.md,
+      tablet: spacing.lg,
+      desktop: spacing.xl,
+    },
+  },
 };
 
 export const glassMorphism = {
@@ -204,5 +221,28 @@ export const animations = {
     easeIn: 'ease-in',
     easeOut: 'ease-out',
     easeInOut: 'ease-in-out',
+  },
+};
+
+// Responsive utilities
+export const responsive = {
+  // Check if current screen width matches breakpoint
+  isDesktop: (width: number) => width >= layout.breakpoints.desktop,
+  isTablet: (width: number) => width >= layout.breakpoints.tablet && width < layout.breakpoints.desktop,
+  isMobile: (width: number) => width < layout.breakpoints.tablet,
+  
+  // Get grid columns based on screen width
+  getGridColumns: (width: number) => {
+    if (width >= layout.breakpoints.wide) return layout.grid.columns.wide;
+    if (width >= layout.breakpoints.desktop) return layout.grid.columns.desktop;
+    if (width >= layout.breakpoints.tablet) return layout.grid.columns.tablet;
+    return layout.grid.columns.mobile;
+  },
+  
+  // Get grid gap based on screen width
+  getGridGap: (width: number) => {
+    if (width >= layout.breakpoints.desktop) return layout.grid.gap.desktop;
+    if (width >= layout.breakpoints.tablet) return layout.grid.gap.tablet;
+    return layout.grid.gap.mobile;
   },
 };

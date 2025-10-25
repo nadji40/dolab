@@ -576,7 +576,7 @@ const styles = StyleSheet.create({
    },
   footer: {
     alignItems: 'center',
-    paddingHorizontal: spacing.lg,
+    paddingHorizontal: spacing.lg, 
     paddingVertical: spacing.xl,
   },
   footerText: {
