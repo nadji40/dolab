@@ -13,49 +13,49 @@
   "categories": ["business", "productivity", "events"],
   "icons": [
     {
-      "src": "/icon-72.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-96.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-128.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-144.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-152.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-192.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-384.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icon-512.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -63,21 +63,21 @@
   ],
   "screenshots": [
     {
-      "src": "/screenshot-mobile-1.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Home screen showing events"
     },
     {
-      "src": "/screenshot-mobile-2.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "390x844",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Dashboard with analytics"
     },
     {
-      "src": "/screenshot-desktop-1.png",
+      "src": "https://eventdolab.com/assets/images/logo_maharat.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
@@ -92,7 +92,7 @@
       "url": "/checkin",
       "icons": [
         {
-          "src": "/icon-96.png",
+          "src": "https://eventdolab.com/assets/images/logo_maharat.png",
           "sizes": "96x96"
         }
       ]
@@ -104,7 +104,7 @@
       "url": "/",
       "icons": [
         {
-          "src": "/icon-96.png",
+          "src": "https://eventdolab.com/assets/images/logo_maharat.png",
           "sizes": "96x96"
         }
       ]
@@ -116,7 +116,7 @@
       "url": "/dashboard",
       "icons": [
         {
-          "src": "/icon-96.png",
+          "src": "https://eventdolab.com/assets/images/logo_maharat.png",
           "sizes": "96x96"
         }
       ]
