@@ -34,7 +34,7 @@ const LoginScreen: React.FC = () => {
         {/* Logo */}
         <View style={styles.logoContainer}>
           <Image
-            source={{ uri: 'https://eventeventdolab.com/assets/images/logo_maharat.png' }}
+            source={{ uri: 'https://eventdolab.com/assets/images/logo_maharat.png' }}
             style={[styles.logo, { tintColor: colors.textPrimary }]}
             resizeMode="contain"
           />

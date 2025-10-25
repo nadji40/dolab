@@ -219,7 +219,7 @@ const HomeScreen: React.FC = () => {
           </View>
           
           <Image
-            source={{ uri: 'https://eventeventdolab.com/assets/images/logo_maharat.png' }}
+            source={{ uri: 'https://eventdolab.com/assets/images/logo_maharat.png' }}
             style={styles.logo}
             resizeMode="contain"
           />
