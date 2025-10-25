@@ -133,18 +133,22 @@ const MainTabNavigator = () => {
   const isDesktop = responsive.isDesktop(screenData.width);
 
   // Create a wrapper component for each screen
-  const ScreenWrapper = ({ children, routeName }: { children: React.ReactNode; routeName: string }) => (
-    <ResponsiveLayout
-      activeRoute={currentRoute}
-      onNavigate={(route) => {
-        setCurrentRoute(route);
-        // Navigate to the route - we'll handle this through the tab navigator
-      }}
-      showSidebar={isDesktop}
-    >
-      {children}
-    </ResponsiveLayout>
-  );
+  const ScreenWrapper = ({ children, routeName }: { children: React.ReactNode; routeName: string }) => {
+    // Update current route when this wrapper is rendered
+    React.useEffect(() => {
+      setCurrentRoute(routeName);
+    }, [routeName]);
+
+    return (
+      <ResponsiveLayout
+        activeRoute={currentRoute}
+        onNavigate={(route) => setCurrentRoute(route)}
+        showSidebar={isDesktop}
+      >
+        {children}
+      </ResponsiveLayout>
+    );
+  };
 
   return (
     <Tab.Navigator
@@ -191,12 +195,6 @@ const MainTabNavigator = () => {
           textAlign: isRTL ? 'right' : 'left',
         },
       })}
-      screenListeners={{
-        tabPress: (e) => {
-          const routeName = e.target?.split('-')[0] || 'Home';
-          setCurrentRoute(routeName);
-        },
-      }}
     >
       <Tab.Screen 
         name="Home" 

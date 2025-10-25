@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Platform,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../contexts/AppContext';
 import { darkColors, lightColors, responsive } from '../theme';
 import Sidebar from './Sidebar';
@@ -22,6 +23,7 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
   onNavigate,
   showSidebar = true,
 }) => {
+  const navigation = useNavigation();
   const { isDark } = useTheme();
   const colors = isDark ? darkColors : lightColors;
   
@@ -44,6 +46,13 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
     setSidebarCollapsed(!sidebarCollapsed);
   };
 
+  const handleSidebarNavigation = (route: string) => {
+    // Use the navigation hook directly
+    navigation.navigate(route as never);
+    // Also call the original onNavigate for state updates
+    onNavigate(route);
+  };
+
   if (!shouldShowSidebar) {
     // Mobile/tablet layout - just return children
     return (
@@ -59,7 +68,7 @@ const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
       <View style={styles.desktopLayout}>
         <Sidebar
           activeRoute={activeRoute}
-          onNavigate={onNavigate}
+          onNavigate={handleSidebarNavigation}
           collapsed={sidebarCollapsed}
           onToggleCollapse={handleToggleCollapse}
         />
