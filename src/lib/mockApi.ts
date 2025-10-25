@@ -392,7 +392,14 @@ export class MockApi {
         salary: { min: 6000, max: 12000, currency: 'SAR' },
         postedDate: '2024-10-20',
         deadline: '2024-12-20',
-        status: 'active'
+        status: 'active',
+        organizer: {
+          id: 'org-design-001',
+          name: { ar: 'استوديو الإبداع للتصميم', en: 'Creative Design Studio' },
+          type: 'company',
+          logo: 'https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=200',
+          website: 'https://creativedesign.sa'
+        }
       }
     ];
     
